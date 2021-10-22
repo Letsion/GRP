@@ -1,0 +1,48 @@
+{
+    "name": "golden_roleplay_core",
+    "version": "0.0.1",
+    "description": "Golden Roleplay alt:V Server",
+    "scripts": {
+        "build": "npm run eslint && node build.mjs",
+        "dev": "altv-reconnect | nodemon --watch \"./src/**\" --ext \"ts\" --exec \"npm run build && cd srv/ && altv-server.exe\"",
+        "db": "mongod --dbpath db",
+        "eslint": "eslint src/",
+        "postinstall": "bash ./update-altv.sh dev"
+    },
+    "devDependencies": {
+        "@altv/types-client": "^1.7.6",
+        "@altv/types-natives": "^1.4.2",
+        "@altv/types-server": "^1.9.6",
+        "@altv/types-shared": "^1.0.1",
+        "@altv/types-webview": "^1.0.2",
+        "@animxyz/core": "^0.6.4",
+        "@rollup/plugin-node-resolve": "^13.0.2",
+        "@rollup/plugin-replace": "^3.0.0",
+        "@rollup/plugin-typescript": "^8.2.3",
+        "@stuyk/altv-reconnect": "^1.5.0",
+        "@types/node": "^16.3.3",
+        "@types/sjcl": "^1.0.30",
+        "@types/ws": "^7.4.7",
+        "@typescript-eslint/eslint-plugin": "^4.28.4",
+        "@typescript-eslint/parser": "^4.28.4",
+        "eslint": "^7.31.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-prettier": "^3.4.0",
+        "less": "^4.1.1",
+        "migrate-mongo": "^8.2.2",
+        "mongodb": "^4.0.0",
+        "nodemon": "^2.0.12",
+        "prettier": "^2.3.2",
+        "rollup": "^2.56.2",
+        "rollup-plugin-terser": "^7.0.2",
+        "rollup-plugin-vue": "^6.0.0",
+        "typescript": "^4.3.5",
+        "vue": "^3.1.4"
+    },
+    "dependencies": {
+        "discord.js": "^12.5.3",
+        "mysql": "^2.18.1",
+        "sql": "file:sql",
+        "typeorm": "^0.2.37"
+    }
+}

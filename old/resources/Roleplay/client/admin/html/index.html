@@ -1,0 +1,1044 @@
+<html style="overflow: hidden !important; box-sizing: border-box">
+  <head>
+    <meta charset="utf-8" />
+      <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+      <link href="../../Vue/vuetify.min.css" rel="stylesheet">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
+    <link href="style.css" rel="stylesheet" />
+    <title>Admin System</title>
+  </head>
+  <body>
+    <div id="app" >
+      <v-app v-if="open" style="background-color: rgba(255, 255, 255, 0); overflow: hidden !important; box-sizing: border-box">
+        <div class="tablet">
+          <div class="content">
+            <div v-if="loading">
+              <v-overlay>
+                <v-progress-circular :width="5" color="amber" indeterminate size="80"></v-progress-circular>
+              </v-overlay>
+            </div>
+            <div v-else>
+              <v-navigation-drawer app v-model="drawer" permanent expand-on-hover :mini-variant.sync="mini">
+                <v-list>
+                  <v-list-group prepend-icon="mdi-menu">
+                    <template v-slot:activator>
+                      <v-list-item-title>Menü</v-list-item-title>
+                    </template>
+                    <v-list-item v-for="(item, i) in menu" v-on:click="triggerMenu(item.value)" link>
+                      <v-list-item-icon>
+                        <v-icon>{{ item.icon }}</v-icon>
+                      </v-list-item-icon>
+                      <v-list-item-content>
+                        <v-list-item-title>{{ item.title }}</v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list-group>
+                  <v-list-group prepend-icon="mdi-shield">
+                    <template v-slot:activator>
+                      <v-list-item-title>Deine Aktionen</v-list-item-title>
+                    </template>
+                    <v-list-item v-for="(item, i) in action" v-on:click="triggerAction(item.value)" link>
+                      <v-list-item-icon>
+                        <v-icon>{{ item.icon }}</v-icon>
+                      </v-list-item-icon>
+                      <v-list-item-content>
+                        <v-list-item-title>{{ item.title }}</v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                      <v-dialog max-width="600px" transition="dialog-bottom-transition" v-model="dialog">
+                          <template v-slot:activator="{ on, attrs }">
+                              <v-list-item v-bind="attrs" v-on="on">
+                                  <v-list-item-icon><v-icon>mdi-map-marker</v-icon></v-list-item-icon>
+                                  <v-list-item-title>TP zur Position</v-list-item-title>
+                              </v-list-item>
+                          </template>
+                          <v-card>
+                              <v-card-title>
+                                  <span class="headline">Zur Position teleportieren</span>
+                              </v-card-title>
+                              <v-card-text>
+                                  <v-row>
+                                      <v-col cols="12" sm="6" md="4">
+                                        <v-text-field v-model="x" required label="X"></v-text-field>
+                                      </v-col>
+                                      <v-col cols="12" sm="6" md="4">
+                                          <v-text-field v-model="y" required label="Y"></v-text-field>
+                                      </v-col>
+                                      <v-col cols="12" sm="6" md="4">
+                                          <v-text-field v-model="z" required label="Z"></v-text-field>
+                                      </v-col>
+                                  </v-row>
+                              </v-card-text>
+                              <v-card-actions>
+                                  <v-spacer></v-spacer>
+                                  <v-btn text @click="dialog = false" color="red">Abbrechen</v-btn>
+                                  <v-btn text @click="triggerAction(3); dialog = false;">Teleportieren</v-btn>
+                              </v-card-actions>
+                          </v-card>
+                      </v-dialog>
+                  </v-list-group>
+                    <v-list-group prepend-icon="mdi-shield-account" v-if="Player">
+                        <template v-slot:activator>
+                            <v-list-item-title>Player Aktion</v-list-item-title>
+                        </template>
+                        <v-list>
+                            <v-list-item link>
+                                <v-list-item-title> Spieler: {{Player.username}}</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item v-if="Player.guid !== -1" v-for="(item, i) in playerAction" v-on:click="triggerPlayerAction(item.value)" link>
+                                <v-list-item-icon>
+                                    <v-icon>{{ item.icon }}</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-content>
+                                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-dialog max-width="600px" transition="dialog-bottom-transition" v-model="dialogBan">
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-list-item v-bind="attrs" v-on="on">
+                                        <v-list-item-icon><v-icon>mdi-account-off-outline</v-icon></v-list-item-icon>
+                                        <v-list-item-title>Spieler kicken</v-list-item-title>
+                                    </v-list-item>
+                                </template>
+                                <v-card>
+                                    <v-card-title>
+                                        <span class="headline">Spieler: {{Player.username}} kicken</span>
+                                    </v-card-title>
+                                    <v-card-text>
+                                        <v-text-field label="Begründung" v-model="kickDialog"></v-text-field>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn text @click="dialogBan = false; kickDialog = ''" color="red">Abbrechen</v-btn>
+                                        <v-btn text @click="triggerPlayerAction(11); dialogBan = false;">Spieler kicken</v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+                            <v-dialog max-width="600px" transition="dialog-bottom-transition" v-model="dialogKick">
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-list-item v-bind="attrs" v-on="on">
+                                        <v-list-item-icon><v-icon>mdi-gavel</v-icon></v-list-item-icon>
+                                        <v-list-item-title>Spieler bannen</v-list-item-title>
+                                    </v-list-item>
+                                </template>
+                                <v-card>
+                                    <v-card-title>
+                                        <span class="headline">Spieler: {{Player.username}} bannen</span>
+                                    </v-card-title>
+                                    <v-card-text>
+                                        <v-text-field label="Begründung" v-model="banDialog"></v-text-field>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn text @click="dialogKick = false; banDialog = ''" color="red">Abbrechen</v-btn>
+                                        <v-btn text @click="triggerPlayerAction(12); dialogKick = false;">Spieler Bannen</v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+                        </v-list>
+                    </v-list-group>
+                </v-list>
+              </v-navigation-drawer>
+              <v-main>
+                <v-container fluid>
+                  <div v-if="loading">
+                    <v-overlay>
+                      <v-progress-circular :width="5" color="amber" indeterminate size="80"></v-progress-circular>
+                    </v-overlay>
+                  </div>
+                  <div v-if="mainMenu" class="white--text">
+                    <h1>Willkommen, {{name}}</h1>
+                    <v-spacer></v-spacer>
+                    <v-card class="elevation-24"> </v-card>
+                  </div>
+                  <div v-if="onlinePlayer">
+                    <v-card class="elevation-24">
+                      <v-card-title>
+                        Online Spieler
+                        <v-spacer></v-spacer>
+                        <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+                      </v-card-title>
+                      <v-data-table light show-expand :expanded.sync="expanded" item-key="username" class="elevation-24" :headers="onlinePlayerHeader" :items="onlinePlayer" :search="search">
+                        <template v-slot:expanded-item="{ headers, item }">
+                          <td :colspan="headers.length" class="white--text">
+                            <div style="display: flex">
+                              <v-btn color="green" style="margin-left: 40vh" class="white--text" v-on:click="triggerPlayer(item.username)"><v-icon>mdi-open-in-new</v-icon>Anzeigen lassen</v-btn>
+                              <div v-if="canKick">
+                                  <v-row justify="center">
+                                      <v-dialog v-model="dialogKick1" persistent max-width="600px">
+                                          <template v-slot:activator="{ on, attrs }">
+                                              <div style="display: flex">
+                                                  <v-btn class="white--text" color="red" style="margin-left: 3.8vh; margin-top: 1.25vh" v-bind="attrs" v-on="on"><v-icon>mdi-account-off-outline</v-icon> User kicken</v-btn>
+                                              </div>
+                                          </template>
+                                          <v-card>
+                                              <v-card-title>
+                                                  <span class="headline">Spieler: {{item.username}} kicken</span>
+                                              </v-card-title>
+                                              <v-card-text>
+                                                  <v-container>
+                                                      <v-row>
+                                                          <p>Möchtest du wirklich einen Spieler kicken? Nach Bestätigung, kannst du diesen Schritt  nicht mehr rückgängig machen!</p>
+                                                          <v-text-field v-model="description" required label="Begründung"></v-text-field>
+                                                      </v-row>
+                                                  </v-container>
+                                              </v-card-text>
+                                              <v-card-actions>
+                                                  <v-spacer></v-spacer>
+                                                  <v-btn color="red" @click="dialogKick1 = false">Abbrechen</v-btn>
+                                                  <v-btn dark @click="kickPlayer(item.username, description)"><v-icon>mdi-gavel</v-icon> User kicken</v-btn>
+                                              </v-card-actions>
+                                          </v-card>
+                                      </v-dialog>
+                                  </v-row>
+                              </div>
+                              <div v-else>
+                                <v-btn disabled class="white--text" color="orange" style="margin-left: 2vh"><v-icon>mdi-account-multiple-remove</v-icon> User kicken</v-btn>
+                              </div>
+                              <div v-if="canBan">
+                                <v-row justify="center">
+                                  <v-dialog v-model="dialogBan" persistent max-width="600px">
+                                    <template v-slot:activator="{ on, attrs }">
+                                      <div style="display: flex">
+                                        <v-btn class="white--text" color="red" style="margin-left: 3.8vh; margin-top: 1.25vh" v-bind="attrs" v-on="on"><v-icon>mdi-gavel</v-icon> User bannen</v-btn>
+                                      </div>
+                                    </template>
+                                    <v-card>
+                                      <v-card-title>
+                                        <span class="headline">Spieler: {{item.username}} bannen</span>
+                                      </v-card-title>
+                                      <v-card-text>
+                                        <v-container>
+                                          <v-row>
+                                            <p>Möchtest du wirklich einen Spieler bannen? Nach Bestätigung, kannst du diesen Schritt ohne einen Superadmin nicht mehr rückgängig machen!</p>
+                                            <v-text-field v-model="description" required label="Begründung"></v-text-field>
+                                          </v-row>
+                                        </v-container>
+                                      </v-card-text>
+                                      <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn color="red" @click="dialogBan = false">Abbrechen</v-btn>
+                                        <v-btn dark @click="banPlayer(item.username, description)"><v-icon>mdi-gavel</v-icon> User bannen</v-btn>
+                                      </v-card-actions>
+                                    </v-card>
+                                  </v-dialog>
+                                </v-row>
+                              </div>
+                              <div v-else>
+                                <v-btn disabled class="white--text" color="red" style="margin-left: 2vh"><v-icon>mdi-gavel</v-icon> User bannen</v-btn>
+                              </div>
+                            </div>
+                          </td>
+                        </template>
+                      </v-data-table>
+                    </v-card>
+                  </div>
+                  <div v-if="allPlayer">
+                    <v-card class="elevation-24">
+                      <v-card-title>
+                        Alle Spieler
+                        <v-spacer></v-spacer>
+                        <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+                      </v-card-title>
+                      <v-data-table light show-expand class="elevation-24" :expanded.sync="expanded" item-key="username" :headers="allPlayerHeader" :items="allPlayer" :search="search">
+                        <template v-slot:expanded-item="{ headers, item }">
+                          <td :colspan="headers.length" class="white--text">
+                            <div style="display: flex">
+                              <v-btn color="green" style="margin-left: 50vh" class="white--text" @click="triggerPlayer(item.username)"><v-icon>mdi-open-in-new</v-icon>Anzeigen lassen</v-btn>
+                              <div v-if="canBan">
+                                <v-row justify="center">
+                                  <v-dialog v-model="dialog" persistent max-width="600px">
+                                    <template v-slot:activator="{ on, attrs }">
+                                      <div style="display: flex">
+                                        <v-btn class="white--text" color="red" style="margin-left: 2vh; margin-top: 1vh" v-bind="attrs" v-on="on"><v-icon>mdi-gavel</v-icon> User bannen</v-btn>
+                                      </div>
+                                    </template>
+                                    <v-card>
+                                      <v-card-title>
+                                        <span class="headline">Spieler: {{item.username}} bannen</span>
+                                      </v-card-title>
+                                      <v-card-text>
+                                        <v-container>
+                                          <v-row>
+                                            <p>Möchtest du wirklich einen Spieler bannen? Nach Bestätigung, kannst du diesen Schritt ohne einen Superadmin nicht mehr rückgängig machen!</p>
+                                            <v-text-field v-model="description" required label="Begründung"></v-text-field>
+                                          </v-row>
+                                        </v-container>
+                                      </v-card-text>
+                                      <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn color="red" @click="dialog = false">Abbrechen</v-btn>
+                                        <v-btn dark @click="banPlayer(item.username, description)"><v-icon>mdi-gavel</v-icon> User bannen</v-btn>
+                                      </v-card-actions>
+                                    </v-card>
+                                  </v-dialog>
+                                </v-row>
+                              </div>
+                              <div v-else>
+                                <v-btn disabled class="white--text" color="red" style="margin-left: 2vh"><v-icon>mdi-gavel</v-icon> User bannen</v-btn>
+                              </div>
+                            </div>
+                          </td>
+                        </template>
+                      </v-data-table>
+                    </v-card>
+                  </div>
+                  <div v-if="Player">
+                    <h1>User: {{Player.username}}</h1>
+                    <br />
+                    <v-row>
+                      <v-col cols="2" sm="6">
+                        <v-card class="elevation-24">
+                          <h2 style="margin-left: 1vh">Persönliche Daten:</h2>
+                          <br />
+                          <div style="text-align: left; margin-left: 3vh">
+                            <h2>Insgesamte Logins: {{Player.logins}}</h2>
+                            <div v-if="Player.guid !== -1" style="display: flex">
+                              <h2>Server ID: {{Player.guid}}</h2>
+                            </div>
+                            <div v-else style="display: flex">
+                              <h2>Server ID:</h2>
+                              <h2 style="color: red; margin-left: 2vh">Offline</h2>
+                            </div>
+                            <div v-if="Player.whitelisted === 1" style="display: flex">
+                              <h2>Whitelist:</h2>
+                              <h2 style="color: green; margin-left: 2vh">Whitelist</h2>
+                            </div>
+                            <div v-else style="display: flex">
+                              <h2>Whitelist:</h2>
+                              <h2 style="color: red; margin-left: 2vh">keine Whitelist</h2>
+                              <v-btn style="margin-left: 2vh" @click="whitelistPlayer(Player.username)"><v-icon>mdi-account-multiple-plus-outline</v-icon> Whitelisten</v-btn>
+                            </div>
+                              <div style="display: flex">
+                                  <h2>Support Nummer:</h2>
+                                  <h2 style="color: gray; margin-left: 2vh">{{Player.supportNumber}}</h2>
+                              </div>
+                            <div v-if="Player.two === 0" style="display: flex">
+                              <h2>2.Charakter:</h2>
+                              <h2 style="color: red; margin-left: 2vh">nicht genehmigt</h2>
+                              <div v-if="canTwo && !Player.character2">
+                                <v-btn color="green" style="margin-left: 2vh" @click="twoPlayer(Player.username)"><v-icon>mdi-account-plus</v-icon>genehmigen</v-btn>
+                              </div>
+                            </div>
+                            <div v-else style="display: flex">
+                              <h2>2.Charakter:</h2>
+                              <h2 style="color: green; margin-left: 2vh">genehmigt</h2>
+                            </div>
+                            <div v-if="canAdmin">
+                              <div style="display: flex">
+                                <div class="text-center">
+                                  <v-menu rounded offset-y>
+                                    <template v-slot:activator="{ on, attrs }">
+                                      <div style="display: flex">
+                                        <h2>Admin Level:</h2>
+                                        <v-text-field dark v-bind="attrs" readonly v-on="on" v-model="Player.adminLevelName"></v-text-field>
+                                      </div>
+                                    </template>
+                                    <v-list>
+                                      <v-list-item v-for="(item, index) in adminLevelIndex" :key="index">
+                                        <v-list-item-title @click="adminLevel(item.value)">{{ item.title }}</v-list-item-title>
+                                      </v-list-item>
+                                    </v-list>
+                                  </v-menu>
+                                </div>
+                              </div>
+                              <h2>Admin Level2:</h2>
+                              <div style="margin-left: 3vh">
+                                <div style="display: flex">
+                                  <div class="text-center">
+                                    <v-menu rounded offset-y>
+                                      <template v-slot:activator="{ on, attrs }">
+                                        <div style="display: flex">
+                                          <v-text-field dark v-bind="attrs" readonly v-on="on" @keydown.enter="adminLevel2Update(Player.username)" v-model="Player.adminLevelTwoName[0]" style="margin-right: 3vh"></v-text-field>
+                                        </div>
+                                      </template>
+                                      <v-list>
+                                        <v-list-item v-for="(item, index) in adminLevel2Index" :key="index">
+                                          <v-list-item-title @click="admin2Level(item.value, true)">{{ item.title }}</v-list-item-title>
+                                        </v-list-item>
+                                      </v-list>
+                                    </v-menu>
+                                  </div>
+                                  <div class="text-center">
+                                    <v-menu rounded offset-y>
+                                      <template v-slot:activator="{ on, attrs }">
+                                        <div style="display: flex">
+                                          <v-text-field dark v-bind="attrs" readonly v-on="on" v-model="Player.adminLevelTwoName[1]" style="margin-right: 3vh"></v-text-field><v-btn @click="adminLevelUpdate(Player.username)" color="green"><v-icon style="margin-right: 2vh">mdi-content-save</v-icon> Speichern</v-btn>
+                                        </div>
+                                      </template>
+                                      <v-list>
+                                        <v-list-item v-for="(item, index) in adminLevel2Index" :key="index">
+                                          <v-list-item-title @click="admin2Level(item.value, false)">{{ item.title }}</v-list-item-title>
+                                        </v-list-item>
+                                      </v-list>
+                                    </v-menu>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div v-else>
+                              <div style="display: flex">
+                                <h2 style="margin-top: 3.5vh">Admin Level:</h2>
+                                <v-text-field disabled v-model="Player.adminLevelName" style="margin-left: 3vh; margin-right: 3vh"></v-text-field>
+                              </div>
+                              <h2 style="margin-top: 3.5vh">Admin Level2:</h2>
+                              <div style="display: flex">
+                                <v-text-field disabled v-model="Player.adminLevelTwoName[1]" style="margin-left: 3vh; margin-right: 3vh"></v-text-field>
+                              </div>
+                            </div>
+                          </div>
+                        </v-card>
+                        <br/>
+                      </v-col>
+                      <v-col cols="2" sm="6" style="overflow-y: scroll; max-height: 70%">
+                          <h2 style="margin-left: 1vh">Charaktere:</h2>
+                          <div v-for="(item, i) in Player.characters">
+                        <v-card class="elevation-24">
+                          <div style="margin-left: 3vh">
+                            <h2>{{i+1}}. Charakter:</h2>
+                            <div style="margin-left: 3vh">
+                              <div style="display: flex">
+                                <h2>Name:</h2>
+                                <h2 style="margin-left: 2vh; color: grey">{{item.vorname}} {{item.nachname}}</h2>
+                              </div>
+                              <div style="display: flex">
+                                <h2>Geburtstag:</h2>
+                                <h2 style="margin-left: 2vh; color: grey">{{item.geburtstag}}</h2>
+                              </div>
+                              <div style="display: flex" v-if="item.pos">
+                                <h2>Pos:</h2>
+                                <h2 style="margin-left: 2vh; color: gray">
+                                  X: {{item.pos.x}}, <br />
+                                  Y: {{item.pos.y}}, <br />Z: {{item.pos.z}}
+                                </h2>
+                                <v-btn @click="tpToPosition(true)" color="green" style="margin-left: 5vh; margin-top: 3.5vh"><v-icon style="margin-right: 1vh">mdi-map-marker</v-icon>TP To Position</v-btn>
+                              </div>
+                                <h2>Dimension: {{item.dimension}}</h2>
+                              <div v-if="item.dead.deadState === 1">
+                                <h2 style="color: red">Spieler Tod</h2>
+                                <div style="display: flex">
+                                  <h2>Todesgrund:</h2>
+                                  <h2 style="margin-left: 2vh; color: gray">{{item.dead.deadType}}</h2>
+                                </div>
+                              </div>
+                              <div v-else style="display: flex">
+                                <h2 style="color: green">Spieler nicht Tod</h2>
+                              </div>
+                              <div v-if="item.joined === 1">
+                                <h2 style="color: green">Character Online</h2>
+                              </div>
+                              <div v-else>
+                                <h2 style="color: red">Character Offline</h2>
+                              </div>
+                            </div>
+                          </div>
+                        </v-card>
+                              <br/>
+                          </div>
+                      </v-col>
+                    </v-row>
+                  </div>
+                    <div v-if="banList" v-for="(item, i) in banList">
+                        <v-card class="elevation-24">
+                            <h1 style="margin-left: 1vh">Spieler: {{item.player}}</h1>
+                            <div style="margin-left: 3vh">
+                                <div style="display: flex">
+                                    <h2>BanDatum:</h2>
+                                    <h2 style="margin-left: 2vh; color: gray">{{item.date}}</h2>
+                                </div>
+                                <v-spacer></v-spacer>
+                                <div style="display: flex">
+                                    <h2>Bangrund:</h2>
+                                    <h2 style="margin-left: 2vh; color: gray">{{item.why}}</h2>
+                                </div>
+                                <div style="display: flex">
+                                    <h2>gebannt durch:</h2>
+                                    <h2 style="margin-left: 2vh; color: gray">{{item.playerBanned}}</h2>
+                                </div>
+                                <div style="display: flex">
+                                    <h2>Ban endet:</h2>
+                                    <h2 style="margin-left: 2vh; color: gray">{{item.dateEx}}</h2>
+                                </div>
+                                <center>
+                                    <v-btn @click="unBan(item.player)"> Spieler entbannen</v-btn>
+                                </center>
+                                <br/>
+                            </div>
+                        </v-card>
+                        <br/>
+                    </div>
+                    <div v-if="ticketList">
+                        <v-card class="elevation-24">
+                            <v-card-title>
+                                Tickets
+                                <v-spacer></v-spacer>
+                                <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
+                            </v-card-title>
+                            <v-data-table light show-expand :expanded.sync="expanded" item-key="id" class="elevation-24" :headers="ticketListHeader" :items="ticketList" :search="search">
+                                <template v-slot:expanded-item="{ headers, item, index }" >
+                                    <td :colspan="headers.length">
+                                        <div style="display: flex; margin-bottom: 10px; margin-top: 20px">
+                                            <h1>Message:</h1>
+                                            <h1 style="color: grey">{{item.msg}}</h1>
+                                        </div>
+                                        <div style="display: flex; margin-bottom: 10px">
+                                            <h1>Datum:</h1>
+                                            <h1 style="color: grey">{{item.time}}</h1>
+
+                                        </div>
+                                        <div v-if="item.inProgress === true" style="display: flex; margin-bottom: 10px">
+                                            <h1>in Bearbeitung von: {{item.Progress}}</h1>
+                                        </div>
+                                        <div style="display: flex; margin-bottom: 20px">
+                                            <center>
+                                                <v-btn dark v-if="item.open === true" @click="playerTp(item.player)">zum Spieler Tpen</v-btn>
+                                                <v-btn dark v-if="item.inProgress === false" @click="ticketProgress(item.id)">Ticket bearbeiten</v-btn>
+                                                <v-btn dark style="margin-left: 5px" v-if="item.open === true" @click="closeTicket(item.id)">Ticket schließen</v-btn>
+                                            </center>
+                                        </div>
+                                    </td>
+                                </template>
+                            </v-data-table>
+                        </v-card>
+                    </div>
+                </v-container>
+              </v-main>
+            </div>
+          </div>
+        </div>
+      </v-app>
+    </div>
+    <script src="../../Vue/vue.min.js"></script>
+    <script src="../../Vue/vuetify.min.js"></script>
+    <script type="text/javascript">
+      new Vue({
+        el: "#app",
+        vuetify: new Vuetify({ theme: { dark: true } }),
+        data() {
+          return {
+            open: true,
+            loading: false,
+            mainMenu: true,
+              scrollInvoked: 0,
+
+            onlinePlayer: null,
+            onlinePlayerHeader: [
+              {
+                text: "ID",
+                align: "start",
+                filterable: true,
+                sortable: true,
+                value: "guid",
+              },
+              { text: "Name", value: "username" },
+              { text: "Charaktere", value: "characters" },
+                {text: "Offen", value: "open"},
+              { text: "Mehr", value: "data-table-expand" },
+            ],
+            allPlayer: null,
+            allPlayerHeader: [
+              {
+                text: "Name",
+                align: "start",
+                sortable: true,
+                filterable: true,
+                value: "username",
+              },
+              { text: "Mehr", value: "data-table-expand" },
+            ],
+
+            //for onlinePlayer || allPlayer
+            expanded: [],
+            dialog: false,
+            dialogKick: false,
+            dialogKick1: false,
+              dialogBan: false,
+            description: "",
+            singleExpand: false,
+            search: "",
+            //can this
+            canBan: false,
+            canKick: false,
+            canTwo: false,
+            canAdmin: true,
+            //
+            name: null,
+            menu: null,
+            drawer: false,
+            mini: true,
+
+            // divs
+            Player: null,
+            guideInMenu: null,
+
+            adminLevelIndex: [
+              { title: "User", value: 0 },
+              { title: "Developer", value: 1 },
+              { title: "Supporter", value: 2 },
+              { title: "Moderator", value: 3 },
+              { title: "Administrator", value: 4 },
+              { title: "Super Administrator", value: 5 },
+              { title: "Projektmanager", value: 6 },
+              { title: "Projektleitung", value: 7 },
+            ],
+            adminLevel2Index: [
+              { title: "nichts", value: 0 },
+              { title: "Guide", value: -1 },
+              { title: "Grafiker", value: -2 },
+              { title: "Game Designer", value: -3 },
+              { title: "Einreisebeamter", value: -4 },
+              { title: "Fraktionsverwaltung", value: -5 },
+            ],
+            action: [
+              { title: "Adminmodus ein/aus", icon: "mdi-shield-half-full", value: 0 },
+              { title: "Noclip", icon: "mdi-airplane", value: 1 },
+              { title: "Sichtbar/Unsichtbar", icon: "mdi-account-off-outline", value: 2 },
+              { title: "Fahrzeug spawnen", icon: "mdi-car", value: 5 },
+              { title: "Fahrzeug reparieren", icon: "mdi-car-wash", value: 7},
+              { title: "Fahrzeug löschen", icon: "mdi-car-off", value: 6 },
+              { title: "Spieler anzeigen", icon: "mdi-access-point", value: 9},
+              { title: "Spieler wiederbeleheben", icon: "mdi-medical-bag", value: 10},
+              { title: "Standard Dimension", icon: "mdi-vector-difference-ab", value: 8 },
+              { title: "TP To Marker", icon: "mdi-select-marker", value: 4 },
+            ],
+              playerAction: [
+                  { title: "User freeze/unfreeze", icon: "mdi-account-cancel-outline", value: 1},
+                  { title: "User wiederbeleben", icon: "mdi-medical-bag", value: 2},
+                  { title: "User töten", icon: "mdi-account-multiple-remove", value: 3},
+                  { title: "Unsichtbar/Sichtbar", icon: "mdi-account-off-outline", value: 4},
+                  { title: "Stand.Dimension setzen", icon: "mdi-vector-arrange-above", value: 5},
+                  { title: "in seine Dimension", icon: "mdi-vector-difference-ab", value: 6},
+                  { title: "in meine Dimension", icon: "mdi-vector-difference-ba", value: 7},
+                  { title: "Fahrzeug setzen", icon: "mdi-car-connected", value: 8},
+                  { title: "Zu mir TP'n", icon: "mdi-google-maps", value: 9},
+                  { title: "zu ihm TP'n", icon: "mdi-map-marker", value: 10},
+              ],
+            x: '',
+            y: '',
+            z: '',
+            banDialog: "",
+            kickDialog: "",
+              banList: null,
+              ticketList: null,
+              ticketListHeader:  [
+                  { text: "ID", align: "start", filterable: true, sortable: true, value: "id"},
+                  { text: "Spieler", value: "player" },
+                  { text: "Spieler in der Nähe", value: "players" },
+                  {text: "Offen", value: "open"},
+                  { text: "Mehr", value: "data-table-expand" },
+              ]
+          };
+        },
+        methods: {
+            playerTp(name) {
+              this.loading = false;
+              if ('alt' in window) alt.emit('admin:Client:tpToPlayer', name);
+              setTimeout(() => {this.loading = false}, 2500);
+            },
+            closeTicket(item) {
+                this.loading = true;
+                if ('alt' in window) {
+                    alt.emit('admin:Client:ticketClose', item);
+                    setTimeout(() => {alt.emit("admin:Client:supportTicket")}, 500);
+                }
+            },
+            ticketProgress(objectID) {
+                this.loading = true;
+                if ('alt' in window) {
+                    alt.emit('admin:Client:ticketProgress', objectID);
+                    setTimeout(() => {alt.emit("admin:Client:supportTicket")}, 500);
+                }
+            },
+            triggerAction(type) {
+            if ("alt" in window) {
+              switch (type) {
+                case 0:
+                  this.loading = true;
+                  alt.emit("admin:Client:aduty");
+                  setTimeout(() => {
+                    this.loading = false;
+                  }, 500);
+                  break;
+                case 1:
+                  this.loading = true;
+                  alt.emit("admin:Client:noclip");
+                  setTimeout(() => {
+                    this.loading = false;
+                  }, 500);
+                  break;
+                case 2:
+                  this.loading = true;
+                  alt.emit("admin:Client:visible");
+                  setTimeout(() => {
+                    this.loading = false;
+                  }, 500);
+                  break;
+                case 3:
+                    if ('alt' in window) alt.emit('admin:Client:PositionTpTo', this.x, this.y, this.z)
+                  break;
+                case 4:
+                  this.loading = true;
+                  alt.emit("admin:Client:tpToMarker");
+                  setTimeout(() => {
+                    this.loading = false;
+                  }, 500);
+                  break;
+                case 5:
+                  this.loading = true;
+                  if ('alt' in window) alt.emit('admin:Client:spawnVehicle');
+                  setTimeout(() => {
+                    this.loading = false;
+                  }, 500);
+                  break;
+                case 6:
+                  this.loading = true;
+                  if ('alt' in window) alt.emit('admin:Client:destroyNearVehicle')
+                  setTimeout(() => {
+                    this.loading = false;
+                  }, 500);
+                  break;
+                case 7:
+                  this.loading = true;
+                  if ('alt' in window) alt.emit('admin:Client:repairNearVehicle');
+                  setTimeout(() => {
+                    this.loading = false;
+                  }, 500);
+                  break;
+                case 8:
+                  this.loading = true;
+                  if ("alt" in window) alt.emit("admin:Client:toStandardDimension");
+                    setTimeout(() => {
+                        this.loading = false;
+                    }, 500);
+                  break;
+                  case 9:
+                      this.loading = true;
+                      if ('alt' in window) alt.emit('admin:Client:playerBlip');
+                      setTimeout(() => {
+                          this.loading = false;
+                      }, 500);
+                      break;
+                  case 10:
+                      this.loading = true;
+                      if ('alt' in window) alt.emit('admin:Client:playerRevive');
+                      setTimeout(() => {
+                          this.loading = false;
+                      }, 500);
+                      break;
+              }
+            }
+          },
+            triggerPlayerAction(type) {
+              switch (type) {
+                  case 1:
+                      this.loading = true;
+                      if ('alt' in window) alt.emit('admin:Client:freeze', this.Player.username);
+                      setTimeout(() => {
+                          this.loading = false;
+                      }, 100);
+                      break;
+                  case 2:
+                      this.loading = true;
+                      if ('alt' in window) alt.emit('admin:Client:revivePlayer', this.Player.username);
+                      setTimeout(() => {
+                          this.loading = false;
+                      }, 100);
+                      break;
+                  case 3:
+                      this.loading = true;
+                      if ('alt' in window) alt.emit('admin:Client:killPlayer', this.Player.username);
+                      setTimeout(() => {
+                          this.loading = false;
+                      }, 100);
+                      break;
+                  case 4:
+                      this.loading = true;
+                      if ('alt' in window) alt.emit('admin:Client:unVisible', this.Player.username);
+                      setTimeout(() => {
+                          this.loading = false;
+                      }, 100);
+                      break;
+                  case 5:
+                      this.loading = true;
+                      if ('alt' in window) alt.emit('admin:Client:playerStandardDimension', this.Player.username);
+                      setTimeout(() => {
+                          this.loading = false;
+                      }, 100);
+                      break;
+                  case 6:
+                      this.loading = true;
+                      if ('alt' in window) alt.emit('admin:Client:adminInPlayerDimension', this.Player.username);
+                      setTimeout(() => {
+                          this.loading = false;
+                      }, 100);
+                      break;
+                  case 7:
+                      this.loading = true;
+                      if ('alt' in window) alt.emit('admin:Client:playerInAdminDimension', this.Player.username);
+                      setTimeout(() => {
+                          this.loading = false;
+                      }, 100);
+                      break;
+                  case 8:
+                      this.loading = true;
+                      if ('alt' in window) alt.emit('admin:Client:inVehicleSet', this.Player.username);
+                      setTimeout(() => {
+                          this.loading = false;
+                      }, 100);
+                      break;
+                  case 9:
+                      this.loading = true;
+                      if ('alt' in window) alt.emit('admin:Client:tpToAdmin', this.Player.username);
+                      setTimeout(() => {
+                          this.loading = false;
+                      }, 100);
+                      break;
+                  case 10:
+                      this.loading = true;
+                      if ('alt' in window) alt.emit('admin:Client:tpToPlayer', this.Player.username);
+                      setTimeout(() => {
+                          this.loading = false;
+                      }, 100);
+                      break;
+                  case 11:
+                      this.loading = true;
+                      if ('alt' in window) alt.emit('admin:Client:kickPlayer', this.Player.username, this.kickDialog);
+                      setTimeout(() => {
+                          this.loading = false;
+                      }, 100);
+                       break;
+                  case 12:
+                      this.loading = true;
+                      if ('alt' in window) alt.emit('admin:Client:banPlayer', this.Player.username, this.banDialog)
+                      setTimeout(() => {
+                          this.loading = false;
+                          this.banDialog = '';
+                      }, 500);
+                      break;
+              }
+            },
+          adminLevel(number) {
+            this.Player.adminLevel = number;
+            this.adminLevelIndex.forEach((i) => {
+              if (i.value === number) {
+                this.Player.adminLevelName = i.title;
+              }
+            });
+          },
+          admin2Level(number, bool) {
+            if (bool) {
+              this.Player.adminLevelTwo[0] = number;
+              this.adminLevel2Index.forEach((i) => {
+                if (i.value === number) {
+                  this.Player.adminLevelTwoName[0] = i.title;
+                }
+              });
+            } else {
+              this.Player.adminLevelTwo[1] = number;
+              this.adminLevel2Index.forEach((i) => {
+                if (i.value === number) {
+                  this.Player.adminLevelTwoName[1] = i.title;
+                }
+              });
+            }
+          },
+          adminLevelUpdate(name) {
+            if ("alt" in window) alt.emit("admin:Client:adminLevel", name, this.Player.adminLevel, this.Player.adminLevelTwo);
+          },
+          tpToPosition(bool) {
+            if (bool) {
+              if ("alt" in window) alt.emit("admin:Client:tpToPosition", this.Player.character1.pos);
+            } else {
+              if ("alt" in window) alt.emit("admin:Client:tpToPosition", this.Player.character2.pos);
+            }
+          },
+          triggerMenu(i) {
+            if (i === 0) {
+                this.banList = null;
+                this.ticketList = null;
+              this.mainMenu = false;
+              this.loading = true;
+              this.allPlayer = null;
+              this.guideInMenu = null;
+              this.onlinePlayer = null;
+              this.Player = null;
+              this.search = "";
+              if ("alt" in window) {
+                setTimeout(() => {
+                  alt.emit("admin:Client:PlayerOnline");
+                }, 1500);
+              }
+            }
+            if (i === 1) {
+                this.banList = null;
+                this.ticketList = null;
+              this.mainMenu = false;
+              this.loading = true;
+              this.allPlayer = null;
+              this.guideInMenu = null;
+              this.onlinePlayer = null;
+              this.Player = null;
+              this.search = "";
+              if ("alt" in window) {
+                setTimeout(() => {
+                  alt.emit("admin:Client:allPlayer");
+                }, 1500);
+              }
+            }
+            if (i === 2) {
+                this.banList = null;
+                this.ticketList = null;
+              this.mainMenu = false;
+              this.loading = true;
+              this.allPlayer = null;
+              this.guideInMenu = null;
+              this.onlinePlayer = null;
+              this.Player = null;
+              this.search = "";
+              if ("alt" in window) {
+                setTimeout(() => {
+                  alt.emit("admin:Client:supportTicket");
+                }, 1500);
+              }
+            }
+            if (i === 3) {
+                this.banList = null;
+                this.ticketList = null;
+              this.mainMenu = false;
+              this.loading = true;
+              this.allPlayer = null;
+              this.guideInMenu = null;
+              this.onlinePlayer = null;
+              this.Player = null;
+              this.search = "";
+              if ("alt" in window) {
+                setTimeout(() => {
+                  alt.emit("admin:Client:banList");
+                }, 1500);
+              }
+            }
+            if (i === 4) {
+                this.banList = null;
+                this.ticketList = null;
+              this.mainMenu = false;
+              this.loading = true;
+              this.allPlayer = null;
+              this.guideInMenu = null;
+              this.onlinePlayer = null;
+              this.Player = null;
+              this.search = "";
+              if ("alt" in window) {
+                setTimeout(() => {
+                  alt.emit("admin:Client:console");
+                }, 1500);
+              }
+            }
+            if (i === 5) {
+                this.banList = null;
+                this.ticketList = null;
+                this.mainMenu = false;
+              this.loading = true;
+              this.allPlayer = null;
+              this.guideInMenu = null;
+              this.onlinePlayer = null;
+              this.Player = null;
+              this.search = "";
+              setTimeout((i) => {
+                this.loading = false;
+                this.mainMenu = true;
+              }, 1500);
+            }
+          },
+          triggerPlayer(name) {
+              this.banList = null;
+              this.ticketList = null;
+              this.mainMenu = false;
+            this.loading = true;
+            this.allPlayer = null;
+            this.guideInMenu = null;
+            this.onlinePlayer = null;
+            this.Player = null;
+            this.search = "";
+            if ("alt" in window)
+              setTimeout(() => {
+                alt.emit("admin:Client:triggerPlayer", name);
+                this.loading = false;
+              }, 1000);
+          },
+          kickPlayer(name, dialog) {
+            this.dialogKick1 = false;
+            this.description = "";
+            this.search = "";
+            if ("alt" in window) alt.emit("admin:Client:kickPlayer", name, dialog);
+          },
+          banPlayer(name, dialog) {
+            this.dialog = false;
+            this.description = "";
+            this.search = "";
+            this.dialogBan = false;
+            if ("alt" in window) alt.emit("admin:Client:banPlayer", name, dialog);
+          },
+            unBan(name) {
+              this.loading = true;
+                if ('alt' in window) {
+                    alt.emit('admin:Client:unbanPlayer', name);
+                }
+                setTimeout(() => {
+                    alt.emit("admin:Client:banList");
+                }, 2500)
+            },
+          whitelistPlayer(name) {
+            if ("alt" in window) alt.emit("admin:Client:whitelistPlayer", name);
+          },
+          twoPlayer(name) {
+            if ("alt" in window) alt.emit("admin:Client:twoPlayer", name);
+          },
+          toDimension(name) {
+            if ("alt" in window) alt.emit("admin:Client:toDimension", name);
+          },
+        },
+        mounted() {
+          if ("alt" in window) {
+            alt.on("admin:View:on", (bool) => {
+              this.open = bool;
+            });
+            alt.on("admin:View:name", (name) => {
+              this.name = name;
+            });
+            alt.on("admin:View:menu", (menu, bool1, bool2, bool3, bool4) => {
+              this.menu = menu;
+              this.canKick = bool1;
+              this.canBan = bool2;
+              this.canTwo = bool3;
+              this.canAdmin = bool4;
+            });
+            alt.on("admin:View:PlayerOnline", (array) => {
+              this.onlinePlayer = JSON.parse(array);
+              this.loading = false;
+            });
+            alt.on("admin:View:allPlayer", (array) => {
+              this.allPlayer = JSON.parse(array);
+              this.loading = false;
+            });
+            alt.on("admin:View:triggerPlayer", (array) => {
+              this.Player = JSON.parse(array);
+              this.loading = false;
+            });
+            alt.on('admin:View:banList', (ban) => {
+                this.banList = ban;
+                this.loading = false;
+            });
+            alt.on('admin:View:supportTicket', (array) => {
+               this.ticketList = array;
+               this.loading = false;
+            });
+            alt.on("admin:View:loading", (bool, bool2) => {
+              this.loading = bool;
+              this.mainMenu = bool2;
+            });
+          }
+        },
+      });
+    </script>
+  </body>
+</html>

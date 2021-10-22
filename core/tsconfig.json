@@ -1,0 +1,48 @@
+{
+    "compilerOptions": {
+        "baseUrl": "src",
+        "sourceMap": false,
+        "typeRoots": [
+            "./node_modules/@types",
+            "./node_modules/@altv"
+        ],
+        "newLine": "lf",
+        "charset": "utf8",
+        "target": "esnext",
+        "module": "esnext",
+        "allowJs": true,
+        "moduleResolution": "node",
+        "strict": true,
+        "resolveJsonModule": true,
+        "removeComments": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "strictPropertyInitialization": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedIndexedAccess": false,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "outDir": "./srv/resources",
+        "rootDir": "./src",
+        "allowSyntheticDefaultImports": true,
+        "declaration": false,
+    },
+    "lib": [
+        "ESNext.String"
+    ],
+    "include": [
+        "./src/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts",
+        "**/*.json"
+    ]
+}

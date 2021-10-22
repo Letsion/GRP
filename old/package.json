@@ -1,0 +1,49 @@
+{
+  "name": "golden-roleplay",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BeastOnRoad/Golden-Roleplay.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BeastOnRoad/Golden-Roleplay/issues"
+  },
+  "homepage": "https://github.com/BeastOnRoad/Golden-Roleplay#readme",
+  "dependencies": {
+    "@altv/types-shared": "^1.0.1",
+    "altv-types": "^1.0.0",
+    "bcryptjs": "^2.4.3",
+    "chalk": "^4.1.1",
+    "discord.js": "^12.5.3",
+    "fs": "0.0.1-security",
+    "mysql": "^2.18.1",
+    "node-fetch": "^2.6.1",
+    "path": "^0.12.7",
+    "replaceall": "^0.1.6",
+    "simplymongo": "^2.0.9",
+    "sjcl": "^1.0.8",
+    "typeorm": "^0.2.34",
+    "vue": "^2.6.14",
+    "vue-types": "^2.0.3",
+    "vuetify": "^2.5.6",
+    "webpack": "^5.0.0"
+  },
+  "devDependencies": {
+    "@altv/types-client": "^1.7.4",
+    "@altv/types-natives": "^1.4.2",
+    "@altv/types-server": "^1.9.5",
+    "@altv/types-webview": "^1.0.2",
+    "deepmerge": "^4.2.2",
+    "prettier": "^2.3.2",
+    "sass": "^1.35.2",
+    "sass-loader": "^10.2.0"
+  }
+}

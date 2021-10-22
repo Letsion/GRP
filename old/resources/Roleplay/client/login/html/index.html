@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" style="overflow: hidden !important">
+  <head>
+    <meta charset="UTF-8" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet" />
+    <link href="../../Vue/vuetify.min.css" rel="stylesheet" />
+    <link href="style.css" rel="stylesheet" />
+    <title>Login & Character System</title>
+  </head>
+  <body>
+    <div id="app">
+      <v-app style="background-color: rgba(0, 0, 0, 0)">
+        <center>
+          <div class="content" v-if="Login">
+            <v-card class="elevation-24">
+              <v-row>
+                <v-col cols="2" sm="6">
+                  <div class="col-left">
+                    <div class="Überschrift">
+                      <h1 style="">Willkommen, bei Golden Roleplay</h1>
+                    </div>
+                    <h2 style="font-size: 110%; margin-bottom: 7px">Aktuelle Informationen:</h2>
+                    <p style="font-size: 90%; margin-bottom: 30px">Der Server befindet sich derzeit in Entwicklung</p>
+                    <img src="./logo.png" />
+                  </div>
+                </v-col>
+                <v-col cols="2" sm="6">
+                  <div class="elevation-24" style="margin-left: 30px; margin-right: 10px; border: rgb(220, 161, 10) 1px solid">
+                    <div v-if="isLogin">
+                      <h1 style="">Login</h1>
+                      <div class="box">
+                        <v-text-field filled disabled v-model="name" label="Username"></v-text-field>
+                        <v-text-field v-model="password" filled color="rgb(220,161,10)" @keydown.enter="tryPassword()" :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'" :type="show ? 'text' : 'password'" @click:append="show = !show" label="Passwort"></v-text-field>
+                        <v-btn v-on:click="tryPassword()" style="margin-bottom: 20px; color: rgb(220, 161, 10)"><v-icon style="margin-right: 1vh">mdi-login-variant</v-icon>Anmelden</v-btn>
+                      </div>
+                    </div>
+                    <div v-else>
+                      <div v-if="isSupport">
+                        <h1>Registierung</h1>
+                        <div class="box">
+                          <v-text-field filled color="rgb(220,161,10)" @keydown.enter="numberSet()" v-model="number" label="Support Nummer" hint="Bitte gebe die Support Nummer ein!"></v-text-field>
+                          <v-btn @click="numberSet()" style="margin-bottom: 20px; color: rgb(220, 161, 10)"><v-icon style="margin-right: 1vh">mdi-login-variant</v-icon>Bestätigen</v-btn>
+                        </div>
+                      </div>
+                      <div v-else>
+                        <h1>Registierung</h1>
+                        <div class="box">
+                          <v-text-field filled color="rgb(220,161,10)" v-model="newPassword" :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'" @click:append="show = !show" :type="show ? 'text' : 'password'" label="neues Passwort" hint="Bitte gebe dein Passwort ein!"></v-text-field>
+                          <v-text-field filled color="rgb(220,161,10)" @keydown.enter="passwordSet()" v-model="newPasswordTwo" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" @click:append="show1 = !show1" :type="show1 ? 'text' : 'password'" label="Passwort wiederholen" hint="Bitte wiederhole dein Passwort!"></v-text-field>
+                          <v-btn @click="passwordSet()" style="margin-bottom: 20px; color: rgb(220, 161, 10)"><v-icon style="margin-right: 1vh">mdi-login-variant</v-icon>Bestätigen</v-btn>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-card>
+          </div>
+        </center>
+        <div v-if="character" class="characterContent">
+          <v-card>
+            <div class="characterBox">
+              <h1 style="margin-top: 30px">Charakter Auswahl</h1>
+                <v-menu rounded offset-y>
+                    <template v-slot:activator="{ on, attrs }">
+                        <center>
+                            <v-btn v-bind="attrs" v-on="on" outlined style="color: rgb(220, 161, 10); margin-bottom: 10px; margin-top: 5px">{{used}}</v-btn>
+                        </center>
+                    </template>
+                    <v-list>
+                        <v-list-item v-for="(item, index) in characters" :key="index">
+                            <v-list-item-title @click="loadPlayer(index); used = item; indexCharacter = index;">{{item}}</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+                <center>
+                    <v-btn @click="inCharacter(indexCharacter)" style="color: rgb(220, 161, 10); margin-bottom: 15px"><v-icon style="margin-right: 2px">mdi-play</v-icon> Einreisen</v-btn>
+                </center>
+            </div>
+            <div v-if="newCharacter">
+              <center>
+                <v-btn @click="newCharacterIn" class="elevation-24" style="margin-bottom: 10px; color: rgb(220, 161, 10)"><v-icon style="margin-right: 1vh">mdi-account-multiple-plus</v-icon>neuen Charakter erstellen</v-btn>
+              </center>
+            </div>
+          </v-card>
+        </div>
+        <div v-if="newCharacters" class="characterContent">
+          <v-card style="max-width: 450px">
+            <div class="characterBox">
+              <center><h1>Neuer Charakter</h1></center>
+              <div style="margin: 10px; display: flex">
+                <v-card class="elevation-24">
+                  <v-row>
+                    <v-col col="2" sm="6">
+                      <v-text-field v-model="firstname" color="rgb(220,161,10)" label="Vorname" filled style="margin-top: 2vh; margin-left: 10px; margin-right: 10px"></v-text-field>
+                    </v-col>
+                    <v-col col="2" sm="6">
+                      <v-text-field v-model="lastname" color="rgb(220,161,10)" label="Nachname" filled style="margin-top: 2vh; margin-left: 10px; margin-right: 10px"></v-text-field>
+                    </v-col>
+                    <v-col col="2" sm="6">
+                      <v-menu rounded offset-y>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field v-model="sex" label="Geschlecht" v-on="on" v-bind="attrs" filled readonly color="rgb(220,161,10)" style="margin-top: 10px; margin-left: 10px; margin-right: 10px"></v-text-field>
+                        </template>
+                        <v-list>
+                          <v-list-item v-for="(item, index) in sexs" :key="index">
+                            <v-list-item-title @click="sexSwitch(item.value)">{{item.title}}</v-list-item-title>
+                          </v-list-item>
+                        </v-list>
+                      </v-menu>
+                    </v-col>
+                    <v-col col="2" sm="6">
+                      <v-menu rounded offset-overflow ref="menu" :close-on-content-click="false">
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field v-model="birthday" label="Geburtstag" v-on="on" v-bind="attrs" filled readonly color="rgb(220,161,10)" style="margin-top: 10px; margin-left: 10px; margin-right: 10px"></v-text-field>
+                        </template>
+                        <center>
+                          <v-date-picker ref="picker" v-model="birthday"></v-date-picker>
+                        </center>
+                      </v-menu>
+                    </v-col>
+                  </v-row>
+                </v-card>
+              </div>
+              <div class="characterBox">
+                <center>
+                  <v-btn class="elevation-24" @click="setNewCharacter" style="margin: 10px; color: rgb(220, 161, 10)"><v-icon style="margin-right: 1vh">mdi-account-plus</v-icon> Charakter erstellen</v-btn>
+                </center>
+              </div>
+            </div>
+          </v-card>
+        </div>
+      </v-app>
+    </div>
+    <script src="../../Vue/vue.min.js"></script>
+    <script src="../../Vue/vuetify.min.js"></script>
+    <script type="text/javascript">
+      new Vue({
+        el: "#app",
+        vuetify: new Vuetify({ theme: { dark: true } }),
+        data() {
+          return {
+            //Login
+            name: null,
+            show: false,
+            show1: false,
+            isLogin: false,
+            isSupport: false,
+            isPassword: false,
+            Login: false,
+
+            //Inhalt
+            password: "",
+            number: "",
+            newPassword: "",
+            newPasswordTwo: "",
+
+            //character
+            character: false,
+              characters: null,
+            newCharacter: false,
+              used: null,
+              indexCharacter: null,
+
+            //new Character
+            newCharacters: false,
+            firstname: "",
+            lastname: "",
+            sex: "Männlich",
+            sexs: [
+              { title: "Männlich", value: 0 },
+              { title: "Weiblich", value: 1 },
+            ],
+            birthday: "",
+          };
+        },
+        methods: {
+          tryPassword() {
+            if ("alt" in window) alt.emit("auth:Client:try", this.password);
+          },
+          numberSet() {
+            if ("alt" in window) alt.emit("auth:Client:supportNumber", this.number);
+          },
+          passwordSet() {
+            if ("alt" in window) alt.emit("auth:Client:passwordSet", this.newPassword, this.newPasswordTwo);
+          },
+          sexSwitch(number) {
+            if (number === 1) this.sex = "Weiblich";
+            else this.sex = "Männlich";
+          },
+          setNewCharacter() {
+            if ("alt" in window) alt.emit("character:Client:setNewCharacter", this.firstname, this.lastname, this.sex, this.birthday);
+          },
+          inCharacter(index) {
+            if ("alt" in window) alt.emit("character:Client:inCharacter", index);
+          },
+          newCharacterIn() {
+            if ("alt" in window) alt.emit("character:Client:inNewCharacter");
+          },
+            loadPlayer(i) {
+              if ('alt' in window) alt.emit('character:Client:loadPlayer', i);
+            }
+        },
+        mounted() {
+          if ("alt" in window) {
+            alt.on("auth:View:start", (name, bool1, bool2, bool3) => {
+              this.name = name;
+              this.isLogin = bool1;
+              this.isSupport = bool2;
+              this.isPassword = bool3;
+              this.Login = true;
+              this.character = false;
+            });
+            alt.on("character:View:start", (characters, two) => {
+              this.Login = false;
+              this.character = true;
+              this.characters = characters;
+              this.used = characters[0];
+              this.newCharacter = two;
+              this.indexCharacter = 0;
+            });
+            alt.on("character:View:newCharacter", () => {
+              this.character = false;
+              this.newCharacters = true;
+            });
+          }
+        },
+      });
+    </script>
+  </body>
+</html>

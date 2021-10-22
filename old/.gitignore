@@ -1,0 +1,17 @@
+node_modules/
+crashdumps/
+cache/
+resources/Roleplay/server/password/
+.idea/
+server.log
+*.db
+*.db-shm
+*.db-wal
+*.log
+*.ini
+modules/
+data/
+altv-server.exe
+AltV.Net.Host.dll
+AltV.Net.Host.runtimeconfig.json
+

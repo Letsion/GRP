@@ -1,0 +1,77 @@
+@font-face {
+  font-family: "Oswald-Regular";
+  src: url("fonts/Oswald-Regular.eot");
+  src: url("fonts/Oswald-Regular.eot#iefix") format("embedded-opentype"), url("fonts/Oswald-Regular.woff") format("woff"), url("fonts/Oswald-Regular.woff2") format("woff2"), url("fonts/Oswald-Regular.ttf") format("truetype"), url("fonts/Oswald-Regular.svg#webfont34M5alKg") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Oswald-Light";
+  src: url("fonts/Oswald-Light.eot");
+  src: url("fonts/Oswald-Light.eot#iefix") format("embedded-opentype"), url("fonts/Oswald-Light.woff") format("woff"), url("fonts/Oswald-Light.woff2") format("woff2"), url("fonts/Oswald-Light.ttf") format("truetype"), url("fonts/Oswald-Light.svg#webfont34M5alKg") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "digital";
+  src: url("fonts/digital.ttf");
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+#app {
+  display: flex;
+  justify-content: flex-end;
+  align-items: end;
+  bottom: 0;
+}
+
+#mainbox {
+  font-family: "digital";
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 3px;
+  border: rgba(9, 205, 231, 0.705) solid 2px;
+  background-position: left top;
+  background-repeat: repeat;
+  background-color: #000000da;
+  margin: auto;
+  overflow: hidden;
+  user-select: none;
+  width: 500px;
+  bottom: 0;
+  display: flex;
+  position: absolute;
+  margin-bottom: 20px;
+  margin-right: 20px;
+}
+
+h3 {
+  color: rgb(39, 28, 28);
+  text-shadow: 1px 1px 3px rgb(172, 235, 221), 0 0 3px rgb(255, 255, 255), 0 0 3px rgb(172, 235, 221);
+}
+#speedometerStyle {
+  margin-right: 22px;
+}
+
+#engine {
+  margin-right: 22px;
+}
+
+#lock {
+  margin-left: 22px;
+  margin-right: 22px;
+}
+
+#kmh {
+}
+
+#tank {
+  margin-right: 22px;
+}

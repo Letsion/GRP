@@ -1,0 +1,66 @@
+{
+  "_args": [
+    [
+      "@altv/types-server@1.7.1",
+      "F:\\Golden-Roleplay"
+    ]
+  ],
+  "_development": true,
+  "_from": "@altv/types-server@1.7.1",
+  "_id": "@altv/types-server@1.7.1",
+  "_inBundle": false,
+  "_integrity": "sha512-qgKe+elvNST/FKTUpaKA1Yxrqb0S0BBQ3Vlh/JH/Cm9SySsQI48q7eB/zB1jLYc+xFqvLYee4FjSn6tWvVnaCw==",
+  "_location": "/@altv/types-server",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "@altv/types-server@1.7.1",
+    "name": "@altv/types-server",
+    "escapedName": "@altv%2ftypes-server",
+    "scope": "@altv",
+    "rawSpec": "1.7.1",
+    "saveSpec": null,
+    "fetchSpec": "1.7.1"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@altv/types-server/-/types-server-1.7.1.tgz",
+  "_spec": "1.7.1",
+  "_where": "F:\\Golden-Roleplay",
+  "author": {
+    "name": "altMP Team"
+  },
+  "bugs": {
+    "url": "https://github.com/altmp/altv/issues"
+  },
+  "description": "This package contains types definitions for alt:V server-side module.",
+  "files": [
+    "index.d.ts"
+  ],
+  "homepage": "https://github.com/altmp/altv-types#readme",
+  "keywords": [
+    "altmp",
+    "altv",
+    "node",
+    "node-module",
+    "js-module",
+    "gta",
+    "gta5",
+    "gtav"
+  ],
+  "license": "MIT",
+  "name": "@altv/types-server",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/altmp/altv-types.git"
+  },
+  "scripts": {
+    "preversion": "yarn run test",
+    "release": "yarn version --no-git-tag-version",
+    "test": "tsc"
+  },
+  "types": "index.d.ts",
+  "version": "1.7.1"
+}

@@ -1,0 +1,6 @@
+[submodule "resources/altv-os-js-entitysync"]
+	path = resources/altv-os-js-entitysync
+	url = https://github.com/LeonMrBonnie/altv-os-js-entitysync.git
+[submodule "resources/altv-csharp-entity-sync-to-js-wrapper"]
+	path = resources/altv-csharp-entity-sync-to-js-wrapper
+	url = https://github.com/Kudze/altv-csharp-entity-sync-to-js-wrapper.git

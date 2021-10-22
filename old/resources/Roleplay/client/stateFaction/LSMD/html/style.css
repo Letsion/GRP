@@ -1,0 +1,186 @@
+@import url("https://fonts.googleapis.com/css?family=Kanit:900");
+@-webkit-keyframes pulsate {
+  0% {
+    background-color: rgba(244, 67, 54, 0);
+  }
+  25% {
+    background-color: rgba(233, 30, 99, 0);
+  }
+  50% {
+    background-color: rgba(33, 150, 243, 0);
+  }
+  75% {
+    background-color: rgba(255, 193, 7, 0);
+  }
+  100% {
+    background-color: rgba(255, 87, 34, 0);
+  }
+}
+@-moz-keyframes pulsate {
+  0% {
+    background-color: rgba(244, 67, 54, 0);
+  }
+  25% {
+    background-color: rgba(233, 30, 99, 0);
+  }
+  50% {
+    background-color: rgba(33, 150, 243, 0);
+  }
+  75% {
+    background-color: rgba(255, 193, 7, 0);
+  }
+  100% {
+    background-color: rgba(255, 87, 34, 0);
+  }
+}
+@-o-keyframes pulsate {
+  0% {
+    background-color: rgba(244, 67, 54, 0);
+  }
+  25% {
+    background-color: rgba(233, 30, 99, 0);
+  }
+  50% {
+    background-color: rgba(33, 150, 243, 0);
+  }
+  75% {
+    background-color: rgba(255, 193, 7, 0);
+  }
+  100% {
+    background-color: rgba(255, 87, 34, 0);
+  }
+}
+@keyframes pulsate {
+  0% {
+    background-color: rgba(244, 67, 54, 0);
+  }
+  25% {
+    background-color: rgba(233, 30, 99, 0);
+  }
+  50% {
+    background-color: rgba(33, 150, 243, 0);
+  }
+  75% {
+    background-color: rgba(255, 193, 7, 0);
+  }
+  100% {
+    background-color: rgba(255, 87, 34, 0);
+  }
+}
+@-webkit-keyframes move {
+  to {
+    stroke-dashoffset: -1200;
+  }
+}
+@-moz-keyframes move {
+  to {
+    stroke-dashoffset: -1200;
+  }
+}
+@-o-keyframes move {
+  to {
+    stroke-dashoffset: -1200;
+  }
+}
+@keyframes move {
+  to {
+    stroke-dashoffset: -1200;
+  }
+}
+@-webkit-keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+@-moz-keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+@-o-keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+.loader {
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999999;
+  -webkit-animation-duration: 80s;
+  -moz-animation-duration: 80s;
+  -o-animation-duration: 80s;
+  animation-duration: 80s;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -o-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-name: pulsate;
+  -moz-animation-name: pulsate;
+  -o-animation-name: pulsate;
+  animation-name: pulsate;
+  -webkit-animation-direction: normal;
+  -moz-animation-direction: normal;
+  -o-animation-direction: normal;
+  animation-direction: normal;
+}
+.loader svg {
+  left: 0;
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translate(0, -50%);
+  -ms-transform: translate(0, -50%);
+  -o-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+}
+
+.animation {
+  fill: none;
+  stroke: #ba0606;
+  stroke-linecap: square;
+  stroke-miterlimit: 10;
+  stroke-width: 0.6px;
+  opacity: 1;
+  stroke-dasharray: 600;
+  -webkit-animation: move 5s linear forwards infinite, fade 5s linear infinite;
+  animation: move 5s linear forwards infinite, fade 5s linear infinite;
+}
+
+body {
+  background: #ba0606;
+}
+
+h1 {
+  color: #4e0000;
+  font-family: "Kanit";
+  font-size: 60px;
+  line-height: 0em;
+  position: absolute;
+  margin-top: 50px;
+  text-align: center;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  text-shadow: 0 1px 0 #920505, 0 2px 0 #890404, 0 3px 0 #7f0404, 0 4px 0 #750404, 0 5px 0 #6b0303, 0 6px 0 #610303, 0 7px 0 #570303, 0 8px 0 #4d0202, 0 0 5px rgba(141, 0, 0, 0.05), 0 -1px 3px rgba(141, 0, 0, 0.2), 0 9px 9px rgba(141, 0, 0, 0.3), 0 12px 12px rgba(141, 0, 0, 0.3), 0 15px 15px rgba(141, 0, 0, 0.3);
+}
+
+/*# sourceMappingURL=style.css.map */

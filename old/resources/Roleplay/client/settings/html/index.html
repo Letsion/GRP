@@ -1,0 +1,348 @@
+<html style="overflow: hidden">
+    <head>
+        <meta charset="utf-8"/>
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet" />
+        <link href="../../Vue/vuetify.min.css" rel="stylesheet" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
+        <link href="style.css" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div id="app">
+            <div class="navigation">
+                <button class="btn" @click="triggerMenu(0)">Allgemeine Einstellungen</button>
+                <button class="btn" @click="triggerMenu(1)">Tastenbelegung</button>
+                <button class="btn" @click="triggerMenu(2)">Sicherheit</button>
+            </div>
+            <div class="appbar">
+               <h1 class="title">Golden Roleplay</h1>
+            </div>
+            <div class="app-main">
+                <div class="fadeIn" v-if="mainMenu">
+                    <h1 class="h2">Allgemeine Einstellung</h1>
+                    <v-app style="background-color: rgba(0,0,0,0)">
+                        <v-row>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-card class="box secondary" style="margin-left: 3vh">
+                                    <center><h1 class="h3" style="margin-left: 2vh; margin-right: 2vh">Persönliche Einstellungen</h1></center>
+                                    <div class="inbox">
+                                            <v-text-field dark v-model="player.username"  color="rgb(255, 161, 0)" label="Username ändern" hint="Achtung diese Änderung wird auch im Forum durchgeführt!"></v-text-field>
+                                            <v-text-field dark v-model="player.email"  color="rgb(255, 161, 0)" label="Email ändern" hint="Achtung diese Änderung wird auch im Forum durchgeführt!"></v-text-field>
+                                            <center><v-btn dark @click="saveSettings" style="margin-bottom: 3vh; color: rgba(255,161,0,0.92)">Setting speichern</v-btn></center>
+                                    </div>
+                                </v-card>
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                            </v-col>
+                            <v-col cols="12" sm="6" md="4">
+                                <v-card class="secondary" style="margin-right: 3vh; margin-top: 3.9vh;">
+                                    <center><h1 class="h3">Informationen</h1></center>
+                                    <div class="inbox">
+                                        <v-text-field dark v-model="player.visum" readonly   label="Visumstufe"></v-text-field>
+                                        <v-text-field dark v-model="player.logins" readonly   label="Insgesamte Logins"></v-text-field>
+                                        <v-text-field dark v-model="player.characters" readonly  label="Charaktere"></v-text-field>
+                                        <v-text-field dark v-model="player.two" readonly  label="Berechtigung auf einen zusätzlichen Charakter"></v-text-field>
+                                        <p style="font-size: 0; margin-bottom: 3vh">f</p>
+                                    </div>
+                                </v-card>
+                            </v-col>
+                        </v-row>
+                    </v-app>
+                </div>
+                <div class="fadeIn" v-if="keySettings">
+                    <h1 class="h2">Tastenbelegung</h1>
+                        <v-app style="background-color: rgba(0,0,0,0)">
+                            <v-row>
+                                <v-col cols="12" sm="6" md="4">
+                                    <v-card class="box secondary" style="margin-left: 3vh">
+                                        <center><h1 class="h3">Utility</h1></center>
+                                        <div class="inbox">
+                                            <v-row>
+                                                <v-col cols="12" sm="6">
+                                                    <v-text-field v-if="player.adminLevel >= 1" label="Admin System" dark readonly @click="keyReading(0)" @keyup="keySafe(0, $event)" v-model="temp.adminKey"></v-text-field>
+                                                    <v-text-field label="Chat" readonly dark @click="keyReading(1)" @keyup="keySafe(1, $event)" v-model="temp.chatKey"></v-text-field>
+                                                    <v-text-field label="Multi Menü" dark readonly @click="keyReading(7)" @keyup="keySafe(7, $event)" v-model="temp.multiMenuKey"></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12" sm="6">
+                                                    <v-text-field label="Inventory" dark readonly @click="keyReading(6)" @keyup="keySafe(6, $event)" v-model="temp.inventoryKey"></v-text-field>
+                                                    <v-text-field label="Interaktion" dark readonly @click="keyReading(9)" @keyup="keySafe(9, $event)" v-model="temp.interactionKey"></v-text-field>
+                                                </v-col>
+                                            </v-row>
+                                        </div>
+                                    </v-card>
+                                </v-col>
+                                <v-col cols="12" sm="6" md="4">
+                                    <v-card class="box secondary">
+                                        <center><h1 class="h3">Fahrzeug</h1></center>
+                                        <div class="inbox">
+                                            <v-row>
+                                                <v-col cols="12" sm="6">
+                                                    <v-text-field readonly dark label="Motor an/aus" @click="keyReading(4)" @keyup="keySafe(4, $event)" v-model="temp.engineKey"></v-text-field>
+                                                    <v-text-field readonly dark label="Fahrzeug auf/ zu" @click="keyReading(5)" @keyup="keySafe(5, $event)" v-model="temp.lockKey"></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12" sm="6">
+                                                    <v-text-field readonly dark label="Kofferraum auf/zu" @click="keyReading(8)" @keyup="keySafe(8, $event)" v-model="temp.beltKey"></v-text-field>
+                                                </v-col>
+                                            </v-row>
+                                        </div>
+                                    </v-card>
+                                </v-col>
+                                <v-col cols="12" sm="6" md="4">
+                                    <v-card class="box secondary">
+                                        <center><h1 class="h3">Voice</h1></center>
+                                        <div class="inbox">
+                                            <v-row>
+                                                <v-col cols="12" sm="6">
+                                                    <v-text-field readonly dark label="Voice Range" @click="keyReading(2)" @keyup="keySafe(2, $event)" v-model="temp.voiceRangeKey"></v-text-field>
+                                                    <v-text-field readonly dark label="Funk Primär" @click="keyReading(3)" @keyup="keySafe(3, $event)" v-model="temp.funkKey"></v-text-field></v-col>
+                                                <v-col cols="12" sm="6">
+                                                    <v-text-field readonly dark label="Megaphone" @click="keyReading(10)" @keyup="keySafe(10, $event)" v-model="temp.megaphoneKey"></v-text-field>
+                                                    <v-text-field readonly dark label="Funk Secondär" @click="keyReading(11)" @keyup="keySafe(11, $event)" v-model="temp.funkSecondKey"></v-text-field>
+                                                </v-col>
+                                            </v-row>
+                                        </div>
+                                    </v-card>
+                                </v-col>
+                            </v-row>
+                            <center><v-btn color="rgba(0,0,0,0.62)" @click="safeKey" style="color: rgba(255,161,0,0.92); margin-bottom: 73vh;">Änderung speichern</v-btn></center>
+                        </v-app>
+                    </div>
+                    <div class="fadeIn" v-if="security">
+                        <h1 class="h2">Sicherheit</h1>
+                        <v-app style="background-color: rgba(0,0,0,0)">
+                            <v-row>
+                                <v-col cols="12" sm="6" md="4">
+                                    <v-card class="secondary" style="margin-left: 3vh; margin-top: 3.9vh">
+                                        <center><h1 class="h3">Passwort ändern</h1></center>
+                                        <div class="inbox">
+                                            <v-text-field dark v-model="oldPassword" :append-icon="showOldPassword ? 'mdi-eye' : 'mdi-eye-off'" @click:append="showOldPassword = !showOldPassword" :type="showOldPassword ? 'text' : 'password'" color="rgb(255, 161, 0)" label="Aktuelles Passwort"></v-text-field>
+                                            <v-text-field dark v-model="password" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" @click:append="showPassword = !showPassword" :type="showPassword ? 'text' : 'password'" color="rgb(255, 161, 0)" label="neues Passwort"></v-text-field>
+                                            <v-text-field dark v-model="rerunPassword" :append-icon="showRerunPassword ? 'mdi-eye' : 'mdi-eye-off'" @click:append="showRerunPassword = !showRerunPassword" :type="showRerunPassword ? 'text' : 'password'" color="rgb(255, 161, 0)" label="Passwort wiederholen"></v-text-field>
+                                            <center><v-btn dark @click="savePassword" style="margin-bottom: 3vh; color: rgba(255,161,0,0.92)">Passwort speichern</v-btn></center>
+                                        </div>
+                                    </v-card>
+                                </v-col>
+                                <v-col cols="12" sm="6" md="4">
+                                </v-col>
+                                <v-col cols="12" sm="6" md="4">
+                                    <v-card class="box secondary" style="margin-right: 3vh">
+                                        <center><h1 class="h3" style="margin-left: 2vh; margin-right: 2vh">Zwei-Faktor-Authentifizierung</h1></center>
+                                        <div class="inbox">
+                                            <center><p style="color: white; font-family: Quicksand, sans-serif;">In Entwicklung</p></center>
+                                        </div>
+                                    </v-card>
+                                </v-col>
+                            </v-row>
+                        </v-app>
+                    </div>
+            </div>
+        </div>
+        <script src="../../Vue/vue.min.js"></script>
+        <script src="../../Vue/vuetify.min.js"></script>
+        <script type="text/javascript">
+            new Vue({
+                el: "#app",
+                vuetify: new Vuetify({ theme: { themes: {
+                            light: {
+                                primary: '#ffffff', // #E53935
+                                secondary: '#0e0e0e', // #FFCDD2
+                                accent: '#ffffff', // #3F51B5
+                            },
+                        }}}),
+                data() {
+                    return {
+                        loading: false,
+                        open: true,
+                        mainMenu: true,
+                        keySettings: false,
+                        security: false,
+
+                        player: {},
+                        temp: {},
+
+                        oldPassword: '',
+                        password: '',
+                        rerunPassword: '',
+                        showOldPassword: false,
+                        showPassword: false,
+                        showRerunPassword: false,
+
+                        menu: [
+                            {title: 'Allgemein', icon: 'mdi-cogs', value: 0},
+                            {title: 'Tastenbelegung', icon: 'mdi-keyboard-variant', value: 1},
+                            {title: 'Sicherheit', icon: 'mdi-lock', value: 2},
+                        ]
+                    }
+                },
+                methods: {
+                    safeKey() {
+                        this.loading = true;
+                        if ('alt' in window) alt.emit('settings:Client:keysSafe');
+                        setTimeout(() => {this.loading  = false},1000);
+                    },
+                    keySafe(i, e) {
+                        console.log(e);
+                        switch(i) {
+                            case 0:
+                                this.temp.adminKey = `Taste: ${e.key} wurde gespeichert!`;
+                                if ('alt' in window) alt.emit('settings:Client:safeKey', 0, e.keyCode, e.key);
+                                break;
+                            case 1:
+                                this.temp.chatKey = `Taste: ${e.key} wurde gespeichert!`;
+                                if ('alt' in window) alt.emit('settings:Client:safeKey', 1, e.keyCode, e.key);
+                                break;
+                            case 2:
+                                this.temp.voiceRangeKey = `Taste: ${e.key} wurde gespeichert!`;
+                                if ('alt' in window) alt.emit('settings:Client:safeKey', 2, e.keyCode, e.key);
+                                break;
+                            case 3:
+                                this.temp.funkKey = `Taste: ${e.key} wurde gespeichert!`;
+                                if ('alt' in window) alt.emit('settings:Client:safeKey', 3, e.keyCode, e.key);
+                                break;
+                            case 4:
+                                this.temp.engineKey = `Taste: ${e.key} wurde gespeichert!`;
+                                if ('alt' in window) alt.emit('settings:Client:safeKey', 4, e.keyCode, e.key);
+                                break;
+                            case 5:
+                                this.temp.lockKey = `Taste: ${e.key} wurde gespeichert!`;
+                                if ('alt' in window) alt.emit('settings:Client:safeKey', 5, e.keyCode, e.key);
+                                break;
+                            case 6:
+                                this.temp.inventoryKey = `Taste: ${e.key} wurde gespeichert!`;
+                                if ('alt' in window) alt.emit('settings:Client:safeKey', 6, e.keyCode, e.key);
+                                break;
+                            case 7:
+                                this.temp.multiMenuKey = `Taste: ${e.key} wurde gespeichert!`;
+                                if ('alt' in window) alt.emit('settings:Client:safeKey', 7, e.keyCode, e.key);
+                                break;
+                            case 8:
+                                this.temp.beltKey = `Taste: ${e.key} wurde gespeichert!`;
+                                if ('alt' in window) alt.emit('settings:Client:safeKey', 8, e.keyCode, e.key);
+                                break;
+                            case 9:
+                                this.temp.interactionKey = `Taste: ${e.key} wurde gespeichert!`;
+                                if ('alt' in window) alt.emit('settings:Client:safeKey', 9, e.keyCode, e.key);
+                                break;
+                            case 10:
+                                this.temp.megaphoneKey = `Taste: ${e.key} wurde gespeichert!`;
+                                if ('alt' in window) alt.emit('settings:Client:safeKey', 10, e.keyCode, e.key);
+                                break;
+                            case 11:
+                                this.temp.funkSecondKey = `Taste: ${e.key} wurde gespeichert!`;
+                                if ('alt' in window) alt.emit('settings:Client:safeKey', 11, e.keyCode, e.key);
+                                break;
+
+                        }
+                    },
+                    keyReading(i) {
+                        switch(i) {
+                            case 0:
+                                this.temp.adminKey = "Taste wird gelesen";
+                                break;
+                            case 1:
+                                this.temp.chatKey = "Taste wird gelesen";
+                                break;
+                            case 2:
+                                this.temp.voiceRangeKey = "Taste wird gelesen";
+                                break;
+                            case 3:
+                                this.temp.funkKey = "Taste wird gelesen";
+                                break;
+                            case 4:
+                                this.temp.engineKey = "Taste wird gelesen";
+                                break;
+                            case 5:
+                                this.temp.lockKey = "Taste wird gelesen";
+                                break;
+                            case 6:
+                                this.temp.inventoryKey = "Taste wird gelesen";
+                                break;
+                            case 7:
+                                this.temp.multiMenuKey = "Taste wird gelesen";
+                                break;
+                            case 8:
+                                this.temp.beltKey = "Taste wird gelesen";
+                                break;
+                            case 9:
+                                this.temp.interactionKey = "Taste wird gelesen";
+                                break;
+                            case 10:
+                                this.temp.megaphoneKey = "Taste wird gelesen";
+                                break;
+                            case 11:
+                                this.temp.funkSecondKey = "Taste wird gelesen";
+                                break;
+                        }
+                    },
+                    triggerMenu(i){
+                        switch (i) {
+                            case 0:
+                                this.loading = true;
+                                this.mainMenu = true;
+                                this.keySettings = false;
+                                this.security = false;
+                                setTimeout(() => {
+                                    this.loading = false;
+                                }, 2500);
+                                break;
+                            case 1:
+                                this.loading = true;
+                                this.mainMenu = false;
+                                this.keySettings = true;
+                                this.security = false;
+                                setTimeout(() => {
+                                    this.loading = false;
+                                }, 2500);
+                                break;
+                            case 2:
+                                this.loading = true;
+                                this.mainMenu = false;
+                                this.keySettings = false;
+                                this.security = true;
+                                setTimeout(() => {
+                                    this.loading = false;
+                                }, 2500);
+                                break;
+                        }
+                    },
+                    saveSettings() {
+                        this.loading = true;
+                        if ('alt' in window) alt.emit('settings:Client:saveSettings', this.player.username, this.player.email);
+                        setTimeout(() => { if ('alt' in window) alt.emit('settings:Client:loadingSetting')}, 1000);
+                        setTimeout(() => {
+                            this.loading = false;
+                        }, 2500);
+                    },
+                    savePassword() {
+                        this.loading = true;
+                        if ('alt' in window) alt.emit('settings:Client:savePassword', this.oldPassword, this.password, this.rerunPassword);
+                        setTimeout(() => {
+                            this.oldPassword = "";
+                            this.password = "";
+                            this.rerunPassword = "";
+                            this.loading = false;
+                        });
+                    }
+                },
+                mounted() {
+                    if ('alt' in window) {
+                        alt.on('setting:View:loading', (player) => {
+                            this.player = player;
+                            this.player.username = player.username;
+                            this.player.two = player.two ? 'Ja' : 'Nein';
+                        });
+
+                        alt.on('settings:View:loadingKeys', (keys) => {
+                            for (const key in keys) {
+                                keys[key] = keys[key][1];
+                            }
+                            setTimeout(() => {this.temp = keys}, 2500);
+                        });
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

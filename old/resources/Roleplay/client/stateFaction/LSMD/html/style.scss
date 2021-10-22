@@ -1,0 +1,162 @@
+@mixin translate($x, $y) {
+  -webkit-transform: translate($x, $y);
+  -ms-transform: translate($x, $y);
+  -o-transform: translate($x, $y);
+  transform: translate($x, $y);
+}
+@mixin keyframes($animationName) {
+  @-webkit-keyframes #{$animationName} {
+    @content;
+  }
+  @-moz-keyframes #{$animationName} {
+    @content;
+  }
+  @-o-keyframes #{$animationName} {
+    @content;
+  }
+  @keyframes #{$animationName} {
+    @content;
+  }
+}
+
+@mixin animate($name, $duration, $iteration, $direction) {
+  -webkit-animation-duration: $duration;
+  -moz-animation-duration: $duration;
+  -o-animation-duration: $duration;
+  animation-duration: $duration;
+
+  -webkit-animation-iteration-count: $iteration;
+  -moz-animation-iteration-count: $iteration;
+  -o-animation-iteration-count: $iteration;
+  animation-iteration-count: $iteration;
+
+  -webkit-animation-name: $name;
+  -moz-animation-name: $name;
+  -o-animation-name: $name;
+  animation-name: $name;
+
+  -webkit-animation-direction: $direction;
+  -moz-animation-direction: $direction;
+  -o-animation-direction: $direction;
+  animation-direction: $direction;
+}
+
+@include keyframes(pulsate) {
+  0% {
+    background-color: rgba(244, 67, 54, 0);
+  }
+  25% {
+    background-color: rgba(233, 30, 99, 0);
+  }
+  50% {
+    background-color: rgba(33, 150, 243, 0);
+  }
+  75% {
+    background-color: rgba(255, 193, 7, 0);
+  }
+  100% {
+    background-color: rgba(255, 87, 34, 0);
+  }
+}
+@include keyframes(move) {
+  to {
+    stroke-dashoffset: -1200;
+  }
+}
+@include keyframes(fade) {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+@mixin pulsate {
+  @include animate(pulsate, 80s, infinite, normal);
+}
+
+.loader {
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999999;
+  @include pulsate;
+  svg {
+    left: 0;
+    position: absolute;
+    top: 50%;
+    @include translate(0, -50%);
+  }
+}
+.animation {
+  fill: none;
+  stroke: #ba0606;
+  stroke-linecap: square;
+  stroke-miterlimit: 10;
+  stroke-width: 0.6px;
+  opacity: 1;
+  stroke-dasharray: 600;
+  -webkit-animation: move 5s linear forwards infinite, fade 5s linear infinite;
+  animation: move 5s linear forwards infinite, fade 5s linear infinite;
+}
+
+@import url("https://fonts.googleapis.com/css?family=Kanit:900");
+
+$LIGHTING_FLOOR: 1;
+$LIGHTING_CEIL: 2;
+$LIGHTING_FLAT: 3;
+
+@mixin text3d($primary, $depth: 5, $shadowsteps: 5, $shadowincrementer: 3px, $shadowopacity: 0.5, $primaryshadowcolour: #000, $lighting: $LIGHTING_CEIL) {
+  $predefinedShadows: (0 0 5px rgba($primaryshadowcolour, 0.05), 0 -1px 3px rgba($primaryshadowcolour, 0.2), 0 3px 5px rgba($primaryshadowcolour, 0.2));
+  $value: ();
+  @for $i from 1 through $depth {
+    $num: $i + px;
+    $hueadjust: $i;
+    @if ($lighting == $LIGHTING_FLOOR) {
+      $hueadjust: ($i * 2 - $depth - 5) * 1%;
+    }
+    @elseif ($lighting == $LIGHTING_CEIL) {
+      $hueadjust: -($i * 2 + $depth - 10) * 1%;
+    }
+    @elseif ($lighting == $LIGHTING_FLAT) {
+      $hueadjust: -$depth * 1%;
+    }
+    $colour: adjust-color($primary, $lightness: $hueadjust);
+    $theShadow: 0 $num 0 $colour;
+    $value: append($value, $theShadow, comma);
+  }
+
+  @for $i from 1 through $shadowsteps {
+    @if ($i >= length($predefinedShadows)) {
+      $dist: $i * $shadowincrementer;
+      $value: append($value, 0 $dist $dist rgba($primaryshadowcolour, $shadowopacity));
+    } @else {
+      $value: append($value, nth($predefinedShadows, $i));
+    }
+  }
+
+  text-shadow: $value;
+}
+
+$primarycolour: #ba0606;
+
+body {
+  background: $primarycolour;
+}
+
+h1 {
+  color: #4e0000;
+  font-family: "Kanit";
+  font-size: 60px;
+  line-height: 0em;
+  position: absolute;
+  margin-top: 50px;
+  text-align: center;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+
+  @include text3d(adjust-color($primarycolour, $lightness: -8%), $depth: 8, $primaryshadowcolour: adjust-color($primarycolour, $lightness: -10%, $saturation: +20%), $shadowopacity: 0.3);
+}

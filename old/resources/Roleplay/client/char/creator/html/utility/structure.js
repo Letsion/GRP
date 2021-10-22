@@ -1,0 +1,1 @@
+const structureLabels = ["Nasenbreite", "Nasenhöhe", "Nasenlänge", "Nasenrücken", "Nasen Spitze", "Breite des Nasenrückens", "Stirnhöhe", "Stirnbreite", "Wangenknochenhöhe", "Wangenknochenbreite", "Wangen Breite", "Augenlider", "lippen", "Backenbreite", "Backenhöhe", "Kinnlänge", "Kinn Position", "Kinn Länge", "Kinn Form", "Halsbreite"];

@@ -1,0 +1,123 @@
+body {
+    user-select: none;
+}
+
+.navigation {
+    height: 82.4%;
+    width: 13.2vh;
+    position: fixed;
+    z-index: 1;
+    top: 6.854vh;
+    left: 9.241vh;
+    overflow-x: hidden;
+    background: rgba(3, 3, 3, 0.7);
+    background-blend-mode: color-burn;
+    /*backdrop-filter: blur(40px);
+
+     */
+}
+
+.appbar {
+    position: fixed;
+    left: 22.45vh;
+    right: 8.26vh;
+    top: 6.87vh;
+    bottom: 84vh;
+
+    background: linear-gradient(90deg, rgba(255, 161, 0, 0.92) 0%, rgba(255, 175, 0, 0.92) 50%, rgba(255, 161, 0, 0.92) 100%);
+    /*backdrop-filter: blur(4px);
+     */
+}
+
+.app-main {
+    position: fixed;
+    left: 22.45vh;
+    right: 8.26vh;
+    top: 15.9vh;
+    bottom: 10.75vh;
+    background: rgba(19, 19, 19, 0.54);
+    /*backdrop-filter: blur(20px);
+     */
+}
+
+
+.box {
+    margin-top: 3.9vh;
+
+    background: rgba(0, 0, 0, 0.62);
+    /*backdrop-filter: blur(40px);
+     */
+}
+
+.title {
+
+    margin-top: 3.9vh;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 50px;
+    line-height: 0;
+    /* or 0% */
+
+    align-items: center;
+    text-align: center;
+
+    color: #000000;
+}
+
+.h2 {
+
+    margin-top: 1.5vh;
+    font-family: Quicksand, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 40px;
+    line-height: 50px;
+    align-items: center;
+    text-align: center;
+
+    color: #FFFFFF;
+}
+
+.h3 {
+    text-align: center;
+    font-family: Quicksand, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 30px;
+    line-height: 50px;
+    color: #FFFFFF;
+}
+
+.inbox {
+    margin-left: 2vh;
+    margin-right: 2vh;
+}
+
+.fadeIn {
+    animation: fadeIn 0.5s !important;
+}
+
+@keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
+}
+
+.btn {
+    min-width: 12.8vh;
+    background-color: rgba(49, 49, 49, 0);
+    border: none !important;
+    outline: none !important;
+    color: white;
+    padding: 16px 16px;
+    text-align: center;
+    font-size: 16px;
+    margin: 4px 2px;
+    opacity: 0.6;
+    transition: 0.3s;
+}
+.btn:hover {
+    background-color: rgba(49, 49, 49, 0.24);
+    opacity: 1;
+}

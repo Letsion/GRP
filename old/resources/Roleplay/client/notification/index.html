@@ -1,0 +1,71 @@
+<html style="overflow: hidden !important; user-select: none;">
+  <head>
+    <meta http-equiv="content-type" charset=utf-8">
+  </head>
+  <body>
+    <script src="vanilla-toast.js"></script>
+    <script type="text/javascript">
+      const toastPosition = {
+        TopLeft: "top-left",
+        TopCenter: "top-center",
+        TopRight: "top-right",
+        BottomLeft: "bottom-left",
+        BottomCenter: "bottom-center",
+        BottomRight: "bottom-right",
+      };
+
+      if ("alt" in window) {
+        alt.on("notification:View:success", (msg, timer) => {
+          vt.success(msg, {
+            title: undefined,
+            position: toastPosition.TopLeft,
+            duration: timer,
+            closable: false,
+            focusable: false,
+            callback: undefined,
+          });
+        });
+        alt.on("notification:View:info", (msg, timer) => {
+          vt.info(msg, {
+            title: undefined,
+            position: toastPosition.TopLeft,
+            duration: timer,
+            closable: false,
+            focusable: false,
+            callback: undefined,
+          });
+        });
+        alt.on("notification:View:warn", (msg, timer) => {
+          vt.warn(msg, {
+            title: undefined,
+            position: toastPosition.TopLeft,
+            duration: timer,
+            closable: false,
+            focusable: false,
+            callback: undefined,
+          });
+        });
+        alt.on("notification:View:error", (msg, timer) => {
+          vt.error(msg, {
+            title: undefined,
+            position: toastPosition.TopLeft,
+            duration: timer,
+            closable: false,
+            focusable: false,
+            callback: undefined,
+          });
+        });
+        alt.on("notification:View:announce", (msg, timer) => {
+          vt.warn(msg, {
+            title: undefined,
+            position: toastPosition.TopCenter,
+            duration: timer,
+            closable: false,
+            focusable: true,
+            callback: undefined,
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+{
+    "files.eol": "\n",
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true
+    },
+    "editor.formatOnSave": true,
+    "eslint.format.enable": true,
+    "eslint.lintTask.enable": true,
+    "eslint.run": "onSave",
+    "eslint.validate": ["javascript", "typescript"],
+    "gitlens.currentLine.enabled": false,
+    "gitlens.codeLens.enabled": false,
+    "jestrunner.runOptions": ["--env", "node", "--detectOpenHandles", "--forceExit"],
+    "jestrunner.codeLensSelector": "**/*.{test,unit}.ts",
+    "todo-tree.general.tags": ["BUG", "HACK", "FIXME", "TODO", "CLEARANCE"],
+    "todo-tree.highlights.useColourScheme": true,
+    "todo-tree.highlights.defaultHighlight": {
+        "fontWeight": "bold",
+        "gutterIcon": true,
+        "type": "whole-line"
+    },
+    "todo-tree.highlights.customHighlight": {
+        "BUG": {
+            "background": "#ff0000",
+            "icon": "bug",
+            "iconColour": "#ff0000"
+        },
+        "HACK": {
+            "background": "#ff9900",
+            "icon": "zap",
+            "iconColour": "#ff6600"
+        },
+        "FIXME": {
+            "background": "#feed00",
+            "icon": "flame",
+            "iconColour": "#e0b000"
+        },
+        "TODO": {
+            "background": "#00eeee",
+            "icon": "tasklist",
+            "iconColour": "#00aaaa"
+        },
+        "CLEARANCE": {
+            "background": "#99ff99",
+            "icon": "question",
+            "iconColour": "#00cc00"
+        }
+    },
+    "todo-tree.highlights.backgroundColourScheme": [],
+    "todo-tree.highlights.foregroundColourScheme": ["#000000"],
+    "todo-tree.tree.groupedByTag": true,
+    "todo-tree.tree.tagsOnly": true,
+    "todo-tree.tree.showCountsInTree": true,
+    "typescript.tsdk": "node_modules/typescript/lib"
+}

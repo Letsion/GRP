@@ -1,0 +1,370 @@
+@import 'fonts.less';
+@import '@animxyz/core';
+
+@primary: #feed00;
+@primary-darken: #dca10a;
+
+* {
+    font-family: 'Roboto', sans-serif;
+    user-select: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    margin-bottom: 1em;
+}
+
+input,
+button {
+    outline: none;
+    width: 100%;
+    padding: 1em;
+    margin-bottom: 0.4em;
+    background-color: #222;
+    border: 2px solid #444;
+    color: #fff;
+
+    &::placeholder {
+        color: #ddd;
+    }
+
+    &:hover {
+        background-color: #333;
+    }
+
+    &.primary {
+        background: linear-gradient(@primary-darken, @primary, @primary-darken);
+        color: #000;
+
+        &:hover {
+            background: linear-gradient(@primary-darken, @primary, @primary, @primary-darken);
+        }
+
+        &:disabled {
+            background: #444;
+            color: #bbb;
+            cursor: not-allowed;
+        }
+    }
+
+    &.active {
+        background: linear-gradient(@primary-darken, @primary, @primary-darken);
+        color: #000;
+    }
+}
+
+button {
+    font-weight: bold;
+}
+
+.login {
+    position: absolute;
+    top: calc((100vh - 400px) / 2);
+    left: calc((100vw - 850px) / 2);
+    display: flex;
+    width: 850px;
+    height: 400px;
+    background: rgba(19, 19, 19, 0.73);
+    backdrop-filter: blur(20px);
+    color: #fff;
+    border-radius: 1em;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+    & > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 50%;
+        padding: 24px;
+    }
+}
+
+.character {
+    position: absolute;
+    left: 0;
+    margin-top: 25%;
+    width: 300px;
+    //background-color: #1e1e1e;
+    background: rgba(19, 19, 19, 0.73);
+    backdrop-filter: blur(20px);
+    border-radius: 1em;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.characterBox {
+    text-align: center;
+    padding: 1.5vh;
+}
+
+.characterTitle {
+    color: white;
+}
+
+.notification-group {
+    position: absolute;
+    right: 0;
+    margin: 2% 2% 16px 0;
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+
+    .notification {
+        margin-bottom: 8px;
+        background-color: #1e1e1e;
+        color: white;
+        width: fit-content;
+        margin-left: auto;
+        min-width: 50%;
+
+        .header {
+            padding: 6px 12px 6px 12px;
+            margin-bottom: 0;
+            font-weight: bold;
+            color: #1e1e1e;
+        }
+
+        .msg {
+            padding: 6px 12px 6px 12px;
+            font-weight: 300;
+        }
+
+        .img {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            font-size: 40px;
+        }
+
+        .timer {
+            position: relative;
+            -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+            height: 4px;
+            animation-name: lineout;
+        }
+
+        @keyframes lineout {
+            from {
+                width: 100%;
+            }
+            to {
+                width: 0;
+            }
+        }
+    }
+}
+
+.settings {
+    position: absolute;
+    top: calc((100vh - 400px) / 2);
+    left: calc((100vw - 850px) / 2);
+    display: flex;
+    width: 850px;
+    height: 400px;
+    background-color: #1e1e1e;
+    color: #fff;
+    border-radius: 1em;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+    .nav {
+        margin: 12px 4px 12px 12px;
+        width: 250px;
+        border-right: 4px solid #444;
+        display: flex;
+        flex-direction: column;
+
+        .header {
+            display: flex;
+            margin-bottom: 12px;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .options {
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 8px;
+
+            &::-webkit-scrollbar {
+                width: 0.5em;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background-color: @primary-darken;
+                border-right: 4px solid transparent;
+                background-clip: padding-box;
+            }
+        }
+    }
+
+    .current {
+        margin: 12px 12px 12px 0;
+        flex-grow: 1;
+
+        .keysComponent {
+            max-height: 100%;
+            display: flex;
+            flex-direction: column;
+
+            .keySets {
+                display: flex;
+                margin-bottom: 1em;
+
+                .keySet {
+                    width: fit-content;
+                    height: 32px;
+                    padding: 0 8px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-left: 4px;
+
+                    &.activate {
+                        &:disabled {
+                            background: #444;
+                            color: #bbb;
+                            cursor: not-allowed;
+                        }
+                    }
+                }
+
+                .checked {
+                    margin-right: 4px;
+                    color: #099b21;
+                }
+
+                .seperator {
+                    flex-grow: 1;
+                }
+            }
+
+            .keysWrapper {
+                overflow-y: auto;
+                flex-grow: 1;
+
+                &::-webkit-scrollbar {
+                    width: 0.25em;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    background-color: @primary-darken;
+                }
+
+                .keys {
+                    display: flex;
+                    justify-content: space-between;
+                    margin: 8px;
+
+                    .name {
+                        display: flex;
+                        align-items: center;
+                    }
+
+                    .key {
+                        width: 100px;
+                        height: 32px;
+                        margin: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        &.change {
+                            border-color: @primary-darken;
+                        }
+
+                        @keyframes blinker {
+                            from {
+                                opacity: 1;
+                            }
+                            to {
+                                opacity: 0;
+                            }
+                        }
+
+                        .blink {
+                            text-decoration: blink;
+                            animation-name: blinker;
+                            animation-duration: 0.6s;
+                            animation-iteration-count: infinite;
+                            animation-timing-function: ease-in-out;
+                            animation-direction: alternate;
+                        }
+                    }
+                }
+            }
+        }
+
+        .accountComponent {
+            max-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}
+
+/* Dropdown Button */
+.dropbtn {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    padding: 16px;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #1e1e1e;
+    min-width: 160px;
+    border-radius: 0 5px 5px 5px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: #ffffff;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+    background-color: #2f2f2f;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    background-color: #4b4b4b;
+}
+
+.show {
+    display: block;
+}
+
+.sexTitle {
+    color: white;
+    padding: 4px;
+}

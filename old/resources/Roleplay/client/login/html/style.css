@@ -1,0 +1,40 @@
+.content {
+  margin: 40vh;
+  width: 850px;
+}
+
+body {
+  background-size: 100% 100%;
+  font-family: Calibri, sans-serif;
+}
+
+.Überschrift {
+  font-size: 12px;
+  line-height: 200%;
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+.col-left {
+  margin-left: 10px;
+}
+
+.box {
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.characterContent {
+  margin: auto;
+  margin-left: 0;
+}
+
+.characterBox {
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+.characterContents {
+  margin: 20px;
+}

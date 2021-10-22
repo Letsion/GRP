@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" style="overflow: hidden">
+    <head>
+        <meta charset="UTF-8">
+        <title>Inventory</title>
+        <link href="../../Vue/vuetify.min.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
+        <link href="style.css" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    </head>
+    <body style="">
+        <div id="app">
+            <div v-if="open">
+                <div class="app-bar-left">
+                    <h1>{{name}}</h1>
+                </div>
+                    <div class="box-left">
+                        <div v-if="clothesLeft">
+                            <div v-if="sex === 'Weiblich'">
+                                <!--<center><img src="http://assets/pack/client/pictures/female.png" style="height: 50vh"></center>-->
+                            </div>
+                            <div v-else>
+                                <div class="wrapper">
+                                    <div class="container" v-dragula="clothesLeftData" bag="clothes">
+                                        <!-- with click -->
+                                        <div v-for="text in clothesLeftData" @click="">{{text}} [click me]</div>
+                                    </div>
+                                </div>
+                                <!--<center><img src="http://assets/pack/client/pictures/male.png" style="height: 50vh"></center>-->
+                            </div>
+                        </div>
+                        <div v-if="weapon">
+
+                        </div>
+                    </div>
+                    <div class="menu-left">
+                        <div class="tooltipLeft">
+                            <span class="tooltiptextLeft">Kleidung</span>
+                            <button @click="menuLeftSwitch(0)" style="border-radius: 0 20px 5px 5px">
+                                <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M44.3333 56H11.6667V18.6667L7 21.196L0 12.768L14 0H42L56 12.845L49 21.3547L44.3333 18.6667V56ZM18.6667 2.33333H37.3333C36.4817 6.64067 33.152 10.5 28 10.5C22.848 10.5 19.5183 6.51467 18.6667 2.33333Z" fill="white"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="tooltipLeft">
+                            <span class="tooltiptextLeft">Equipment</span>
+                            <button @click="menuLeftSwitch(1)">
+                                <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                    <rect width="56" height="56" fill="url(#pattern0)"/>
+                                    <defs>
+                                        <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+                                            <use xlink:href="#image0" transform="scale(0.00195312)"/>
+                                        </pattern>
+                                        <image id="image0" width="512" height="512" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAMAAADDpiTIAAAAA3NCSVQICAjb4U/gAAAAIVBMVEVHcEz///////////////////////////////////////+PBM77AAAACnRSTlMAf8JAGOhhoLCQmTvdTQAAEkZJREFUeJztneF26roOhDckQNv3f+BdaAsJceQIWxnsme/PXXf1bBxJY0tynOTfPyGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghwjmjL6CEj6av/g0YP09fDftw+Po6HUb0VbTLcPz65oi+jNe5Xf/XZUBfR5OMh9PXD81OofHXgK9jw6sYiOHj684FfTGvcnnYoEzgYTyfviacGvXdOLNCmWArw+XriUYX0MOzHcoEecbz8dltVhn4LRbovBqseX1aWqJMYDNeEk77Ju3kH7EgE8RtkT+d01dwTpqiTLBOavL/Oi3xX1+3CG587n6hdz5/5/UlJYFVa5QJUjy6vhRLBw+59WEHHtdwsv64RJngmWnXlyIxZx4TDLZTdLSub1HKzkkuGqTYk39thk1S7GH/a77yqPITdciYsGLOUcXAjWXXlyLhrIlqILNpEuJEjbLoAROslY9EPG35rPOx/Lefk8m0/5XPirxEHLfZlS4faRhWur4U9iIL6ARs/a30gAl4M8F615cikeen/373zmoa4UQIPbaxZoLts//mpeUPzBqtnefR4Li0l4wj4DPvmCmJOT6V0GlXBQwn+8o2FbYPmr3fWUS+UZqRSLSzSvu44zo6Tlf4l3rAOZwp4F9m8yfvpbmfd2wFZhn+xR4Qc+VvhTNRJir9+Uq720I6H/blHvAObR/gLAPNGwI7KmAe/6Ie8MewfS77DXGulJkycC8FPBV4hT1g2i4SysvA57kWXwmOT9Gt0AOSloBXnN3ScrItJBStgOf4V+gBgecZ4DjnSmKFXzg7dj9geC5b1AOWUbsMDFbAIv6p6eusbBK3uYhw1svmuZC7AsKKqsStS/WAZYzFNwRSEvoIWVXHxMZVYvqqB3RRXgamJBSRBpInF9QDllJeBqbvKX1WXgTG5DDqActxTpjNRXfdRWBZ/d1QD1iOM2VmzoXMfFttcqWnv3rAKsSUgT//baX8unpuUT1gDZznQuzjwU/UkIBxbFU9YA2ci2ZizlizrlQC1qll9YB1iCoD/5xcIAH70Lp6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"/>
+                                    </defs>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="app-bar-right">
+                        <h1>{{inventory}}</h1>
+                    </div>
+                    <div class="box-right">
+                        <div v-if="wallet">
+                        <div class="wrapper">
+                            <div class="container" v-dragula="clothesData" bag="wallet">
+
+                            </div>
+                        </div>
+                        </div>
+                        <div v-if="bag">
+
+                        </div>
+                        <div v-if="clothes">
+
+                        </div>
+                        <div v-if="cupboard">
+
+                        </div>
+                    </div>
+                    <div class="menu-right">
+                        <div class="tooltip">
+                            <span class="tooltiptext">Inventar</span>
+                            <button @click="menuSwitch(0)" style="border-radius: 20px 0 5px 5px">
+                                <svg style="width:9vh;height:56px" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M21,18V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5A2,2 0 0,1 5,3H19A2,2 0 0,1 21,5V6H12C10.89,6 10,6.9 10,8V16A2,2 0 0,0 12,18M12,16H22V8H12M16,13.5A1.5,1.5 0 0,1 14.5,12A1.5,1.5 0 0,1 16,10.5A1.5,1.5 0 0,1 17.5,12A1.5,1.5 0 0,1 16,13.5Z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="tooltip">
+                            <span class="tooltiptext">Tasche</span>
+                            <button @click="menuSwitch(1)">
+                                <svg style="width:9vh;height:56px" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M16,5V4A2,2 0 0,0 14,2H10A2,2 0 0,0 8,4V5A4,4 0 0,0 4,9V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V9A4,4 0 0,0 16,5M10,4H14V5H10V4M12,9L14,11L12,13L10,11L12,9M18,16H9V18H8V16H6V15H18V16Z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="tooltip">
+                            <span class="tooltiptext">Kleidung</span>
+                            <button @click="menuSwitch(2)">
+                                <svg width="9vh" height="56" viewBox="0 0 33 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M15.4194 3.43C15.4194 2.91433 15.9042 2.49667 16.5 2.49667C17.0985 2.49667 17.5833 2.91433 17.5833 3.43C17.5833 3.94567 17.0985 4.36333 16.5 4.36333C15.9042 4.36333 15.4194 3.94567 15.4194 3.43ZM24.2675 53.6667L18.0735 16.3333H14.9265L8.73521 53.6667H2.95833V15.1247C4.85417 14.8843 6.53063 14.301 7.94979 13.3467C10.065 11.921 11.4869 9.681 12.1342 7H20.8658C21.5131 9.681 22.935 11.9233 25.0529 13.3467C26.4748 14.3057 28.1431 14.903 30.0417 15.148V53.6667H24.2675ZM9.38792 7C8.83 8.925 7.77104 10.5047 6.28146 11.508C5.34167 12.1403 4.22583 12.5533 2.95833 12.768V7H9.38792ZM30.0417 7V12.7493C28.7823 12.5393 27.6583 12.138 26.7213 11.508C25.2317 10.5047 24.1727 8.925 23.6121 7H30.0417ZM30.0417 4.66667H2.95833V2.33333H30.0417V4.66667ZM0.25 0V56H11.0833L16.5 23.3333L21.9167 56H32.75V0H0.25Z" fill="white"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="tooltip">
+                            <span class="tooltiptext">Spind</span>
+                            <button @click="menuSwitch(3)">
+                                <svg width="9vh" height="56" viewBox="0 0 55 63" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <ellipse cx="11.4239" cy="31.9338" rx="3.88043" ry="3.03676" fill="white"/>
+                                    <rect x="9.76086" y="8.07353" width="34.3696" height="4.33824" rx="2" fill="white"/>
+                                    <rect x="9.76086" y="14.1471" width="34.3696" height="4.33824" rx="2" fill="white"/>
+                                    <rect x="9.76086" y="44.5147" width="34.3696" height="4.33824" rx="2" fill="white"/>
+                                    <rect x="9.76086" y="50.5882" width="34.3696" height="4.33824" rx="2" fill="white"/>
+                                    <path d="M51 2H4C2.89543 2 2 2.89543 2 4V59C2 60.1046 2.89543 61 4 61H51C52.1046 61 53 60.1046 53 59V4C53 2.89543 52.1046 2 51 2Z" stroke="white" stroke-width="3"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <script src="../../Vue/vue.min.js"></script>
+        <script src="../../Vue/vueDragula.min.js"></script>
+        <script type="text/javascript">
+            new Vue({
+                el: "#app",
+                data() {
+                    return {
+                        open: false,
+
+                        clothesLeft: true,
+                        weapon: false,
+
+                        wallet: true,
+                        bag: false,
+                        clothes: false,
+                        cupboard: false,
+
+                        walletData: {},
+                        bagData: {},
+                        clothesData: [{id: 0}, {id: 1}],
+                        cupboardData: {},
+                        weaponData: {},
+                        clothesLeftData: [{id: 0}, {id: 1}],
+
+                        name: '',
+                        sex: '',
+                        inventory: 'Inventar',
+                    }
+                },
+                methods: {
+                    menuSwitch(i) {
+                      switch (i) {
+                          case 0:
+                              this.wallet = true;
+                              this.bag = false;
+                              this.clothes = false;
+                              this.cupboard = false;
+                              this.inventory = 'Inventar';
+                          break;
+                          case 1:
+                              this.wallet = false;
+                              this.bag = true;
+                              this.clothes = false;
+                              this.cupboard = false;
+                              this.inventory = 'Tasche';
+                          break;
+                          case 2:
+                              this.wallet = false;
+                              this.bag = false;
+                              this.clothes = true;
+                              this.cupboard = false;
+                              this.inventory = 'Kleidung';
+                          break;
+                          case 3:
+                              this.wallet = false;
+                              this.bag = false;
+                              this.clothes = false;
+                              this.cupboard = true;
+                              this.inventory = 'Spind';
+                          break;
+                      }
+                    },
+                    menuLeftSwitch(i) {
+                      switch (i) {
+                          case 0:
+                              this.clothesLeft = true;
+                              this.weapon = false;
+                          break;
+                          case 1:
+                              this.clothesLeft = false;
+                              this.weapon = true;
+                          break;
+                      }
+                    },
+                },
+                mounted() {
+                    if ('alt' in window) {
+                        alt.on('inventory:View:status', (bool, inventory) => {
+                            this.open = bool;
+                            if (inventory) this.inventoryData = inventory;
+                        });
+                        alt.on('inventory:View:name', (name, sex) => {
+                            this.name = name;
+                            this.sex = sex;
+                        });
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>

@@ -1,0 +1,175 @@
+body {
+  user-select: none;
+}
+
+.box-left {
+  position: fixed;
+  width: 44vh;
+  left: 7vh;
+  top: 20vh;
+  height: 60vh;
+  background: rgba(19, 19, 19, 0.54);
+  backdrop-filter: blur(20px);
+  border-radius: 0 0 0 20px;
+}
+
+.app-bar-left {
+  background: linear-gradient(94.3deg, rgba(113, 129, 162, 0.73) 5.47%, rgba(190, 190, 190, 0.73) 33.46%, rgba(113, 129, 162, 0.73) 62.84%, rgba(190, 190, 190, 0.73) 93.04%, rgba(113, 129, 162, 0.73) 121.43%);
+  position: absolute;
+  left: 7vh;
+  width: 44vh;
+  height: 8vh;
+  bottom: 80vh;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  border-radius: 20px 20px 0 0;
+  backdrop-filter: blur(4px);
+}
+
+.menu-left {
+  position: fixed;
+  z-index: 1;
+  height: 60vh;
+  width: 9vh;
+  left: 51vh;
+  top: 20vh;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(40px);
+  border-radius: 0 20px 20px 0;
+}
+
+h1 {
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 50px;
+  color: #000000;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+
+.box-right {
+  position: fixed;
+  width: 44vh;
+  right: 7vh;
+  top: 20vh;
+  height: 60vh;
+  background: rgba(19, 19, 19, 0.73);
+  backdrop-filter: blur(20px);
+  border-radius: 0 0 20px 0;
+}
+
+.app-bar-right {
+  position: absolute;
+  right: 7vh;
+  width: 44vh;
+  height: 8vh;
+  bottom: 80vh;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  background: linear-gradient(94.3deg, rgba(113, 129, 162, 0.73) 5.47%, rgba(190, 190, 190, 0.73) 33.46%, rgba(113, 129, 162, 0.73) 62.84%, rgba(190, 190, 190, 0.73) 93.04%, rgba(113, 129, 162, 0.73) 121.43%);
+  backdrop-filter: blur(4px);
+  border-radius: 20px 20px 0 0;
+}
+
+.menu-right {
+  position: fixed;
+  z-index: 1;
+  height: 60vh;
+  width: 9vh;
+  right: 50.96vh;
+  top: 20vh;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(40px);
+  border-radius: 20px 0 0 20px;
+}
+
+button {
+  min-width: 9vh;
+  background-color: rgba(49, 49, 49, 0);
+  outline: none !important;
+  color: white;
+  text-align: center;
+  padding: 5px 0 0 0;
+  opacity: 1;
+  transition: 0.3s;
+  border-bottom: 2px solid;
+  border-bottom-color: white;
+  border-radius: 0 0 5px 5px;
+}
+
+button:hover {
+  background-color: rgba(49, 49, 49, 0.24);
+  opacity: 0.5;
+}
+
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: rgba(38, 38, 39, 0.57);
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 1;
+  bottom: 25%;
+  left: -7vh;
+  margin-left: -60px;
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Tooltip container */
+.tooltipLeft {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.tooltipLeft .tooltiptextLeft {
+  visibility: hidden;
+  width: 120px;
+  background-color: rgba(38, 38, 39, 0.57);
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 1;
+  bottom: 25%;
+  right: -13vh;
+  margin-left: -60px;
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltipLeft:hover .tooltiptextLeft {
+  visibility: visible;
+  opacity: 1;
+}
+
+/*# sourceMappingURL=style.css.map */

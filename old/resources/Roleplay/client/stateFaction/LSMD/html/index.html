@@ -1,0 +1,54 @@
+<html style="overflow: hidden !important">
+  <head>
+    <link href="./style.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
+  </head>
+  <body style="background-color: rgba(255, 255, 255, 0) !important">
+    <div id="app" style="background-color: rgba(255, 255, 255, 0) !important">
+      <div v-if="name" style="background-color: rgba(255, 255, 255, 0) !important">
+        <div v-if="notKoma">
+          <div class="loader" style="background-color: rgba(255, 255, 255, 0) !important">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="-466.4 259.6 280.2 47.3" enable-background="new -466.4 259.6 280.2 47.3" xml:space="preserve">
+              <polyline class="animation" points="-465.4,281 -436,281 -418.9,281 -423.9,281 -363.2,281 -355.2,269 -345.2,303 -335.2,263 -325.2,291 -319.2,281 -187.2,281 "></polyline>
+            </svg>
+          </div>
+        </div>
+        <div v-else>
+          <div class="loader" style="background-color: rgba(255, 255, 255, 0) !important">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="-466.4 259.6 280.2 47.3" enable-background="new -466.4 259.6 280.2 47.3" xml:space="preserve">
+              <polyline class="animation" points="-465.4,281 -436,281 -418.9,281 -423.9,281 -363.2,281 -355.2,281 -345.2,281 -335.2,281 -325.2,281 -319.2,281 -187.2,281 "></polyline>
+            </svg>
+          </div>
+        </div>
+        <v-app style="background-color: rgba(255, 255, 255, 0) !important">
+          <div style="text-align: center; color: #5f5f5f">
+            <div v-if="notKoma">
+              <h1></h1>
+            </div>
+            <h1 v-else>{{name}}</h1>
+          </div>
+        </v-app>
+      </div>
+    </div>
+    <script src="../../../Vue/vue.min.js"></script>
+    <script type="text/javascript">
+      new Vue({
+        el: "#app",
+        data() {
+          return {
+            name: null,
+            notKoma: true,
+          };
+        },
+        mounted() {
+          if ("alt" in window) {
+            alt.on("LSMD:View:name", (name, bool) => {
+              this.name = name;
+              this.notKoma = bool;
+            });
+          }
+        },
+      });
+    </script>
+  </body>
+</html>

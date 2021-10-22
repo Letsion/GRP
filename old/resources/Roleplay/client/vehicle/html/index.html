@@ -1,0 +1,71 @@
+<html style="overflow: hidden !important">
+  <head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet" />
+    <link href="../../Vue/vuetify.min.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
+    <link href="style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="app" v-if="isOpen">
+      <div id="mainbox">
+        <div id="lock">
+          <v-icon v-if="lockState" style="color: green">mdi-lock</v-icon>
+          <v-icon v-else style="color: red; margin-bottom: 3px; margin-top: 3px">mdi-lock-open-variant</v-icon>
+        </div>
+        <div id="engine">
+          <v-icon v-if="engineState" style="color: green">mdi-engine</v-icon>
+          <v-icon v-else style="color: red; margin-bottom: 3px">mdi-engine</v-icon>
+        </div>
+        <div id="speedometerStyle" v-if="kmh">
+          <center>
+            <h3 style="font-family: 'digital'"><v-icon style="color: black; margin-bottom: 3px; margin-right: 5px">mdi-speedometer</v-icon>{{kmh}} km/h</h3>
+          </center>
+        </div>
+        <div id="tank">
+          <h3><v-icon style="color: black; margin-left: 5px; margin-bottom: 3px">mdi-gas-station</v-icon>{{tankValue}} l</h3>
+        </div>
+        <div id="kmh">
+          <h3><v-icon style="color: black; margin-left: 5px; margin-bottom: 3px">mdi-map-marker</v-icon>{{gpsValue}} km</h3>
+        </div>
+      </div>
+    </div>
+    <script src="../../Vue/vue.min.js"></script>
+    <script src="../../Vue/vuetify.min.js"></script>
+    <script type="text/javascript">
+      new Vue({
+        el: "#app",
+        vuetify:new Vuetify(),
+        data() {
+          return {
+            isOpen: false,
+            oilState: false,
+            kmh: "145",
+            engineState: null,
+            lockState: null,
+            tankValue: 0,
+            gpsValue: 0,
+          };
+        },
+        mounted() {
+          if ("alt" in window) {
+            alt.on("speedometer:kmh", (speed) => {
+              if (!speed == 0) {
+                this.kmh = speed;
+              } else this.kmh = "0";
+            });
+            alt.on("speedometer:engine", (bool) => {
+              this.engineState = bool;
+            });
+            alt.on("speedometer:lock", (bool) => {
+              this.lockState = bool;
+            });
+            alt.on("speedometer:isOpen", (bool) => {
+              this.isOpen = bool;
+            });
+          }
+        },
+      });
+    </script>
+  </body>
+</html>
